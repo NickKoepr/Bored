@@ -2,33 +2,38 @@ package nl.nickkoepr.bored.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import nl.nickkoepr.bored.R
+
+private val robotoFontFamily = FontFamily(
+    Font(
+        R.font.roboto_black,
+        weight = FontWeight.ExtraBold,
+        style = FontStyle.Normal
+    ),
+    Font(
+        R.font.roboto_medium,
+        weight = FontWeight.Medium,
+        style = FontStyle.Normal
+    )
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
     titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = robotoFontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        fontStyle = FontStyle.Normal,
+        fontSize = 25.sp
+    ), displayLarge = TextStyle(
+        fontFamily = robotoFontFamily,
+        fontWeight = FontWeight.ExtraBold,
+        fontStyle = FontStyle.Normal,
+        fontSize = 40.sp,
+        lineHeight = 50.sp
     )
-    */
 )
