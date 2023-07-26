@@ -1,6 +1,7 @@
 package nl.nickkoepr.bored.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,7 +33,7 @@ fun BoredApp(modifier: Modifier = Modifier) {
     var selectedBottomScreen by rememberSaveable { mutableStateOf(Screens.HOME) }
     Scaffold(
         topBar = {
-            TopBar(R.string.app_name, true, {}, {})
+            TopBar(R.string.app_name, false, {}, {})
         },
         bottomBar = {
             BottomBar(selectedBottomScreen, { selectedScreen ->
@@ -45,6 +46,7 @@ fun BoredApp(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(start = 10.dp)
+                .fillMaxSize()
         )
     }
 }
@@ -140,5 +142,5 @@ fun TopBarPreview() {
 @Preview
 @Composable
 fun BottomBarPreview() {
-    BottomBar(Screens.HOME, {  })
+    BottomBar(Screens.HOME, { })
 }
