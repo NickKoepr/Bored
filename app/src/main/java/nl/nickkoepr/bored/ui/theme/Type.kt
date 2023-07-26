@@ -19,6 +19,11 @@ private val robotoFontFamily = FontFamily(
         R.font.roboto_medium,
         weight = FontWeight.Medium,
         style = FontStyle.Normal
+    ),
+    Font(
+        R.font.roboto_bold,
+        weight = FontWeight.Bold,
+        style = FontStyle.Normal
     )
 )
 
@@ -35,5 +40,10 @@ val Typography = Typography(
         fontStyle = FontStyle.Normal,
         fontSize = 40.sp,
         lineHeight = 50.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = robotoFontFamily,
+        fontWeight = FontWeight.Bold,
+        fontStyle = FontStyle.Normal
     )
 )

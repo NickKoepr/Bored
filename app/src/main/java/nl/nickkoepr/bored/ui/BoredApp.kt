@@ -2,6 +2,7 @@ package nl.nickkoepr.bored.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -117,6 +118,7 @@ fun BottomBar(
                 onClick = { onSelect(selectedScreen) },
                 icon = {
                     Icon(
+                        modifier = Modifier.size(25.dp),
                         painter = painterResource(id = selectedScreen.navigationIcon),
                         contentDescription = null
                     )
