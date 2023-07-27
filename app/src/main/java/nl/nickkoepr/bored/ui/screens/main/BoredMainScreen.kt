@@ -4,8 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,11 +46,15 @@ fun BoredActivityText(activity: Activity, modifier: Modifier = Modifier) {
     )
 }
 
+/**
+ * Floating action button for receiving a new activity.
+ * @param onClick function that runs when a user clicks on the FAB.
+ */
 @Composable
 fun GenerateActivityFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    LargeFloatingActionButton(modifier = modifier, onClick = onClick) {
+    FloatingActionButton(modifier = modifier.size(70.dp), onClick = onClick) {
         Icon(
-            modifier = Modifier.size(45.dp),
+            modifier = Modifier.size(40.dp),
             painter = painterResource(id = R.drawable.refresh),
             contentDescription = stringResource(id = R.string.refresh),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
