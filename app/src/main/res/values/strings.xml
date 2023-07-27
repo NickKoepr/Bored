@@ -5,4 +5,8 @@
     <string name="home">Home</string>
     <string name="favourites">Favourites</string>
     <string name="refresh">Refresh</string>
+    <string name="accessibility">Accessibility</string>
+    <string name="price">Price</string>
+    <string name="type">Type</string>
+    <string name="participants">Participants</string>
 </resources>

@@ -46,7 +46,7 @@ fun BoredApp(modifier: Modifier = Modifier) {
         BoredMainScreen(
             modifier = Modifier
                 .padding(paddingValues)
-                .padding(start = 10.dp)
+                .padding(10.dp)
                 .fillMaxSize()
         )
     }

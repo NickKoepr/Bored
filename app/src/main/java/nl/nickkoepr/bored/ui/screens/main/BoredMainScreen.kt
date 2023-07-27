@@ -1,14 +1,23 @@
 package nl.nickkoepr.bored.ui.screens.main
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,13 +30,17 @@ import nl.nickkoepr.bored.model.DummyActivities
 
 @Composable
 fun BoredMainScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
-        BoredActivityText(activity = DummyActivities.activities[0])
+    Column(modifier = modifier) {
+        Column(modifier = Modifier.weight(1f)) {
+            // All dummy data currently :)
+            ActivityFilterList(selectedFilters = listOf(SelectedFilter.ACCESSIBILITY), onClick = {})
+            BoredActivityText(activity = DummyActivities.activities[0])
+        }
         GenerateActivityFab(
             onClick = { /*TODO*/ },
             modifier = Modifier
                 .align(Alignment.End)
-                .padding(15.dp)
+                .padding(5.dp)
         )
     }
 }
@@ -39,7 +52,7 @@ fun BoredMainScreen(modifier: Modifier = Modifier) {
 @Composable
 fun BoredActivityText(activity: Activity, modifier: Modifier = Modifier) {
     Text(
-        modifier = modifier,
+        modifier = modifier.padding(end = 20.dp),
         text = activity.activity,
         style = MaterialTheme.typography.displayLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -62,8 +75,68 @@ fun GenerateActivityFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * Row with all the possible filter chips.
+ * @param selectedFilters list of all the filters that are active.
+ * @param onClick runs when a user clicks on a filter chip.
+ */
+@Composable
+fun ActivityFilterList(
+    selectedFilters: List<SelectedFilter>,
+    onClick: (SelectedFilter) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyRow(modifier = modifier) {
+        items(SelectedFilter.entries) { filter ->
+            ActivityFilterChip(
+                modifier = Modifier.padding(end = 10.dp),
+                selected = selectedFilters.contains(filter),
+                onClick = { onClick(filter) },
+                label = filter.filterName,
+                icon = filter.filterIcon
+            )
+        }
+    }
+}
+
+/**
+ * Chip for the activity filters.
+ * @param selected true if the filter is active, otherwise false.
+ * @param onClick runs when a user clicks on the filter chip.
+ * @param label string resource that is displayed on the filter chip.
+ * @param icon drawable resource that is displayed on the filter chip.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ActivityFilterChip(
+    selected: Boolean,
+    onClick: () -> Unit,
+    @StringRes label: Int,
+    @DrawableRes icon: Int,
+    modifier: Modifier = Modifier
+) {
+    FilterChip(
+        modifier = modifier,
+        selected = selected,
+        onClick = onClick,
+        label = { Text(text = stringResource(id = label)) },
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = icon),
+                contentDescription = null
+            )
+        }
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun BoredActivityTextPreview() {
     BoredActivityText(DummyActivities.activities[0])
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ActivityFilterChipPreview() {
+    ActivityFilterChip(false, {}, R.string.accessibility, R.drawable.star_full)
 }
