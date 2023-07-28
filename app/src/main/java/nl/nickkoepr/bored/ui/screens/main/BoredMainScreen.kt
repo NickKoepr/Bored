@@ -2,7 +2,6 @@ package nl.nickkoepr.bored.ui.screens.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -15,29 +14,45 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
+import nl.nickkoepr.bored.network.Status
+import nl.nickkoepr.bored.ui.ViewModelProvider
 
 @Composable
-fun BoredMainScreen(modifier: Modifier = Modifier) {
+fun BoredMainScreen(
+    modifier: Modifier = Modifier,
+    viewModel: BoredMainViewModel = viewModel(factory = ViewModelProvider.Factory)
+) {
+    val uiState by viewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         Column(modifier = Modifier.weight(1f)) {
             // All dummy data currently :)
             ActivityFilterList(selectedFilters = listOf(SelectedFilter.ACCESSIBILITY), onClick = {})
-            BoredActivityText(activity = DummyActivities.activities[0])
+            when (val status = uiState.status) {
+                is Status.Success -> {
+                    BoredActivityText(activity = status.activity)
+                }
+                is Status.Loading -> {
+                    // TODO implement loading
+                }
+                is Status.Error -> {
+                    // TODO implement error
+                }
+            }
         }
         GenerateActivityFab(
-            onClick = { /*TODO*/ },
+            onClick = { viewModel.generateActivity() },
             modifier = Modifier
                 .align(Alignment.End)
                 .padding(5.dp)
