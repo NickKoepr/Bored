@@ -1,6 +1,7 @@
 package nl.nickkoepr.bored.model
 
 import androidx.annotation.FloatRange
+import kotlinx.serialization.Serializable
 
 /**
  * Represents an activity given by the Bored api.
@@ -13,6 +14,7 @@ import androidx.annotation.FloatRange
  * @param price range between 0.0 and 1.0 representing the price where 0 is free.
  * @param link optional link with more information about the activity.
  */
+@Serializable
 data class Activity(
     val key: String,
     val activity: String,

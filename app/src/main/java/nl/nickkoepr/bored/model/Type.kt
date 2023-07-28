@@ -1,5 +1,8 @@
 package nl.nickkoepr.bored.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class Type {
     EDUCATION,
     RECREATIONAL,
@@ -9,6 +12,5 @@ enum class Type {
     COOKING,
     RELAXATION,
     MUSIC,
-    BUSYWORK,
-    NONE
+    BUSYWORK
 }
