@@ -9,4 +9,14 @@
     <string name="price">Price</string>
     <string name="type">Type</string>
     <string name="participants">Participants</string>
+
+    <string name="education">education</string>
+    <string name="recreational">recreational</string>
+    <string name="social">social</string>
+    <string name="diy">diy</string>
+    <string name="charity">charity</string>
+    <string name="cooking">cooking</string>
+    <string name="relaxation">relaxation</string>
+    <string name="music">music</string>
+    <string name="busywork">busywork</string>
 </resources>

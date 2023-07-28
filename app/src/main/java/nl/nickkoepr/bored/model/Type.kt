@@ -1,26 +1,28 @@
 package nl.nickkoepr.bored.model
 
+import androidx.annotation.StringRes
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import nl.nickkoepr.bored.R
 
 @Serializable
-enum class Type {
+enum class Type(@StringRes val label: Int) {
     @SerialName("education")
-    EDUCATION,
+    EDUCATION(R.string.education),
     @SerialName("recreational")
-    RECREATIONAL,
+    RECREATIONAL(R.string.recreational),
     @SerialName("social")
-    SOCIAL,
+    SOCIAL(R.string.social),
     @SerialName("diy")
-    DIY,
+    DIY(R.string.diy),
     @SerialName("charity")
-    CHARITY,
+    CHARITY(R.string.charity),
     @SerialName("cooking")
-    COOKING,
+    COOKING(R.string.cooking),
     @SerialName("relaxation")
-    RELAXATION,
+    RELAXATION(R.string.relaxation),
     @SerialName("music")
-    MUSIC,
+    MUSIC(R.string.music),
     @SerialName("busywork")
-    BUSYWORK
+    BUSYWORK(R.string.busywork)
 }
