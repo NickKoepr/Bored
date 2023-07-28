@@ -6,8 +6,8 @@ import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.network.BoredApiService
 
 class BoredNetworkRepository(private val boredApiService: BoredApiService) : NetworkRepository {
-    override fun getRandomActivity(arguments: Arguments): Activity {
-        return boredApiService.getRandomActivity(
+    override suspend fun getRandomActivity(arguments: Arguments): Activity {
+         return boredApiService.getRandomActivity(
             minPrice = arguments.minPrice,
             maxPrice = arguments.maxPrice,
             minAccessibility = arguments.minAccessibility,

@@ -5,6 +5,7 @@ import kotlinx.serialization.json.Json
 import nl.nickkoepr.bored.data.network.BoredNetworkRepository
 import nl.nickkoepr.bored.data.network.repository.NetworkRepository
 import nl.nickkoepr.bored.network.BoredApiService
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
 interface AppContainer {
@@ -15,7 +16,7 @@ class BoredAppContainer : AppContainer {
     private val baseUrl = "https://www.boredapi.com/api/"
 
     private val retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json"))
+        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(baseUrl)
         .build()
 

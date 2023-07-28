@@ -5,8 +5,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface BoredApiService {
-    @GET("/activity")
-    fun getRandomActivity(
+    @GET("activity")
+    suspend fun getRandomActivity(
         @Query("minprice") minPrice: Double?,
         @Query("maxprice") maxPrice: Double?,
         @Query("minaccessibility") minAccessibility: Double?,
