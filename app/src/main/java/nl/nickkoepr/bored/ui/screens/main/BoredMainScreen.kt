@@ -2,6 +2,7 @@ package nl.nickkoepr.bored.ui.screens.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -68,7 +70,7 @@ fun BoredMainScreen(
                 }
 
                 is Status.Loading -> {
-                    // TODO implement loading
+                    LoadingIndicator(modifier = Modifier.fillMaxWidth())
                 }
 
                 is Status.Error -> {
@@ -77,7 +79,7 @@ fun BoredMainScreen(
             }
         }
         GenerateActivityFab(
-            onClick = { viewModel.generateActivity() },
+            onClick = viewModel::generateActivity,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(5.dp)
@@ -227,6 +229,15 @@ fun ActivityStatItem(
     }
 }
 
+/**
+ * Circular animation for indicating a loading request.
+ */
+@Composable
+fun LoadingIndicator(modifier: Modifier = Modifier) {
+    Row(horizontalArrangement = Arrangement.Center, modifier = modifier) {
+        CircularProgressIndicator()
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

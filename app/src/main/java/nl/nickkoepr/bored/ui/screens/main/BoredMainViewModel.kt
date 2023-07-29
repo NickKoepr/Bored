@@ -21,6 +21,7 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
     }
 
     fun generateActivity() {
+        _uiState.update { status -> status.copy(status = Status.Loading) }
         viewModelScope.launch {
             // Update the uiState by making a copy of the status object.
             // Pass the arguments from the uiState to the getRandomActivity() function.
