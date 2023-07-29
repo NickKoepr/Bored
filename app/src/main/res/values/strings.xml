@@ -19,4 +19,6 @@
     <string name="relaxation">relaxation</string>
     <string name="music">music</string>
     <string name="busywork">busywork</string>
+
+    <string name="sync_error">There was an error while fetching data. Please try again.</string>
 </resources>

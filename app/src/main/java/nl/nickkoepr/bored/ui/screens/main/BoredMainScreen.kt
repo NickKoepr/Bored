@@ -74,7 +74,7 @@ fun BoredMainScreen(
                 }
 
                 is Status.Error -> {
-                    // TODO implement error
+                    ErrorIndicator(modifier = Modifier.fillMaxWidth())
                 }
             }
         }
@@ -236,6 +236,21 @@ fun ActivityStatItem(
 fun LoadingIndicator(modifier: Modifier = Modifier) {
     Row(horizontalArrangement = Arrangement.Center, modifier = modifier) {
         CircularProgressIndicator()
+    }
+}
+
+/**
+ * Sync problem icon indicating a potentially error while making a request.
+ */
+@Composable
+fun ErrorIndicator(modifier: Modifier = Modifier) {
+    Row(horizontalArrangement = Arrangement.Center, modifier = modifier) {
+        Icon(
+            modifier = Modifier.size(60.dp),
+            painter = painterResource(id = R.drawable.sync_problem),
+            contentDescription = stringResource(id = R.string.sync_error),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
