@@ -24,6 +24,60 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
         _uiState.update { state -> state.copy(arguments = arguments) }
     }
 
+    fun getAllActiveFilters(): List<SelectedFilter> {
+        val arguments = uiState.value.arguments
+        val selectedFilterList = mutableListOf<SelectedFilter>()
+
+        if (arguments.minPrice != null && arguments.maxPrice != null)
+            selectedFilterList.add(SelectedFilter.PRICE)
+        if (arguments.minAccessibility != null && arguments.maxAccessibility != null)
+            selectedFilterList.add(SelectedFilter.ACCESSIBILITY)
+        if (arguments.participants != null) selectedFilterList.add(SelectedFilter.PARTICIPANTS)
+        if (arguments.type != null) selectedFilterList.add(SelectedFilter.TYPE)
+
+        return selectedFilterList
+    }
+
+    fun resetFilter(selectedFilter: SelectedFilter) {
+        _uiState.update { state ->
+            when (selectedFilter) {
+                SelectedFilter.ACCESSIBILITY -> {
+                    state.copy(
+                        arguments = state.arguments.copy(
+                            minAccessibility = null,
+                            maxAccessibility = null
+                        )
+                    )
+                }
+
+                SelectedFilter.PRICE -> {
+                    state.copy(
+                        arguments = state.arguments.copy(
+                            minPrice = null,
+                            maxPrice = null
+                        )
+                    )
+                }
+
+                SelectedFilter.TYPE -> {
+                    state.copy(
+                        arguments = state.arguments.copy(
+                            type = null,
+                        )
+                    )
+                }
+
+                SelectedFilter.PARTICIPANTS -> {
+                    state.copy(
+                        arguments = state.arguments.copy(
+                            participants = null
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     fun generateActivity() {
         _uiState.update { status -> status.copy(status = Status.Loading) }
         viewModelScope.launch {

@@ -53,8 +53,13 @@ fun BoredMainScreen(
     Box(modifier = modifier) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             ActivityFilterList(
-                selectedFilters = listOf(SelectedFilter.ACCESSIBILITY),
-                onClick = { setFilter = it },
+                selectedFilters = viewModel.getAllActiveFilters(),
+                onClick = { selectedFilter ->
+                    setFilter = selectedFilter
+                },
+                onRemoveClick = { selectedFilter ->
+                    viewModel.resetFilter(selectedFilter)
+                },
                 modifier = Modifier.padding(bottom = 15.dp)
             )
             when (val status = uiState.status) {

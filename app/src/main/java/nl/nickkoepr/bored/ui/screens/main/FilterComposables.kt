@@ -2,10 +2,12 @@ package nl.nickkoepr.bored.ui.screens.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -22,26 +24,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import nl.nickkoepr.bored.R
 
 /**
  * Row with all the possible filter chips.
  * @param selectedFilters list of all the filters that are active.
  * @param onClick runs when a user clicks on a filter chip.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityFilterList(
     selectedFilters: List<SelectedFilter>,
     onClick: (SelectedFilter) -> Unit,
+    onRemoveClick: (SelectedFilter) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyRow(modifier = modifier) {
         items(SelectedFilter.entries) { filter ->
-            ActivityFilterChip(
-                modifier = Modifier.padding(end = 10.dp),
-                selected = selectedFilters.contains(filter),
+            val selectedFilter = selectedFilters.contains(filter)
+            FilterChip(
+                modifier = Modifier.padding(end = 10.dp).height(40.dp),
+                selected = selectedFilter,
                 onClick = { onClick(filter) },
-                label = filter.filterName,
-                icon = filter.filterIcon
+                label = { Text(text = stringResource(id = filter.filterName)) },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = filter.filterIcon),
+                        contentDescription = null
+                    )
+                },
+                trailingIcon = {
+                    if (selectedFilter) {
+                            Icon(
+                                modifier = Modifier.clickable { onRemoveClick(filter) },
+                                painter = painterResource(id = R.drawable.close),
+                                contentDescription = stringResource(id = R.string.remove_filter)
+                            )
+                    }
+                }
             )
         }
     }
