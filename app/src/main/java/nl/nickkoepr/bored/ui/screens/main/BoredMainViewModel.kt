@@ -20,10 +20,18 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
         generateActivity()
     }
 
+    /**
+     * Update the arguments inside the uiState with the given arguments.
+     * @param arguments the uiState will be updated with the given arguments.
+     */
     fun updateArguments(arguments: Arguments) {
         _uiState.update { state -> state.copy(arguments = arguments) }
     }
 
+    /**
+     * Returns all currently active filters.
+     * @return a list with all the currently selected filters.
+     */
     fun getAllActiveFilters(): List<SelectedFilter> {
         val arguments = uiState.value.arguments
         val selectedFilterList = mutableListOf<SelectedFilter>()
@@ -38,6 +46,10 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
         return selectedFilterList
     }
 
+    /**
+     * Reset the given filter.
+     * @param selectedFilter filter that has to be reset.
+     */
     fun resetFilter(selectedFilter: SelectedFilter) {
         _uiState.update { state ->
             when (selectedFilter) {
@@ -78,6 +90,9 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
         }
     }
 
+    /**
+     * Generate a random activity from the bored api and update the uiState with the current status.
+     */
     fun generateActivity() {
         _uiState.update { status -> status.copy(status = Status.Loading) }
         viewModelScope.launch {
@@ -98,7 +113,6 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
             }
         }
     }
-
 }
 
 data class BoredMainUiState(

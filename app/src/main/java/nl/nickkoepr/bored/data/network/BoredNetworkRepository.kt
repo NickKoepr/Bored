@@ -13,7 +13,7 @@ class BoredNetworkRepository(private val boredApiService: BoredApiService) : Net
             minAccessibility = arguments.minAccessibility,
             maxAccessibility = arguments.maxAccessibility,
             participants = arguments.participants,
-            type = arguments.type?.name
+            type = arguments.type?.name?.lowercase()
         )
     }
 }

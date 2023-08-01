@@ -2,6 +2,7 @@ package nl.nickkoepr.bored.ui.screens.main
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,14 +10,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RangeSlider
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import nl.nickkoepr.bored.R
+import nl.nickkoepr.bored.model.Type
 
 /**
  * Row with all the possible filter chips.
@@ -43,7 +49,9 @@ fun ActivityFilterList(
         items(SelectedFilter.entries) { filter ->
             val selectedFilter = selectedFilters.contains(filter)
             FilterChip(
-                modifier = Modifier.padding(end = 10.dp).height(40.dp),
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .height(38.dp),
                 selected = selectedFilter,
                 onClick = { onClick(filter) },
                 label = { Text(text = stringResource(id = filter.filterName)) },
@@ -55,11 +63,11 @@ fun ActivityFilterList(
                 },
                 trailingIcon = {
                     if (selectedFilter) {
-                            Icon(
-                                modifier = Modifier.clickable { onRemoveClick(filter) },
-                                painter = painterResource(id = R.drawable.close),
-                                contentDescription = stringResource(id = R.string.remove_filter)
-                            )
+                        Icon(
+                            modifier = Modifier.clickable { onRemoveClick(filter) },
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = stringResource(id = R.string.remove_filter)
+                        )
                     }
                 }
             )
@@ -149,7 +157,7 @@ fun FilterBottomSheetScaffold(
  * default false.
  */
 @Composable
-fun FilterElementSlider(
+fun FilterElementRangeSlider(
     value: ClosedFloatingPointRange<Float>,
     range: ClosedFloatingPointRange<Float>,
     steps: Int,
@@ -173,7 +181,37 @@ fun FilterElementSlider(
 }
 
 /**
- * [FilterElementSlider] with a range from 0 to 100 and steps of 10.
+ * Slider for selecting a specific value in the given range.
+ * @param value the current selected value.
+ * @param range max range of the slider.
+ * @param steps number of steps the slider makes when a user drags the slider around.
+ * @param onValueChange function that is called when the slider value changes.
+ */
+@Composable
+fun FilterElementSlider(
+    value: Float,
+    range: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    onValueChange: (Float) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Slider(
+            value = value,
+            valueRange = range,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            steps = steps
+        )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = range.start.toInt().toString())
+            Text(text = range.endInclusive.toInt().toString())
+        }
+    }
+}
+
+/**
+ * [FilterElementRangeSlider] with a range from 0 to 100 and steps of 10.
  * @param value currently selected value range.
  * @param onValueChange called when the selected range is changed.
  */
@@ -183,7 +221,7 @@ fun FilterElementSliderZeroToHundred(
     onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    FilterElementSlider(
+    FilterElementRangeSlider(
         value = value,
         range = 0f..100f,
         steps = 10,
@@ -191,4 +229,37 @@ fun FilterElementSliderZeroToHundred(
         isPercent = true,
         modifier = modifier
     )
+}
+
+/**
+ * Makes a list with all the possible [Type] values.
+ * @param selectedType currently selected type (or null if no type is selected).
+ * @param onTypeSelected function that is executed when a user selects a type.
+ */
+@Composable
+fun FilterTypeList(
+    selectedType: Type?,
+    onTypeSelected: (Type) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        items(Type.entries) { type ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp, bottom = 5.dp)
+                    .clickable {
+                        onTypeSelected(type)
+                    },
+                colors = CardDefaults.cardColors(containerColor = if (selectedType != null && selectedType == type) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surface),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
+            ) {
+                Text(
+                    text = stringResource(id = type.label),
+                    modifier = Modifier.padding(start = 5.dp, top = 20.dp, bottom = 20.dp),
+                    color = if (selectedType != null && selectedType == type) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+    }
 }

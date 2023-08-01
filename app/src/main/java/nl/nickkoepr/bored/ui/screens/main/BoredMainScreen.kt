@@ -138,11 +138,38 @@ fun BoredMainScreen(
             }
 
             SelectedFilter.TYPE -> {
-
+                FilterBottomSheetScaffold(
+                    selectedFilter = SelectedFilter.TYPE,
+                    filterElement = {
+                        FilterTypeList(selectedType = uiState.arguments.type, onTypeSelected = { type ->
+                            viewModel.updateArguments(
+                                uiState.arguments.copy(
+                                    type = type
+                                )
+                            )
+                        })
+                    },
+                    dismissRequest = { setFilter = null })
             }
 
             SelectedFilter.PARTICIPANTS -> {
-
+                FilterBottomSheetScaffold(
+                    selectedFilter = SelectedFilter.PARTICIPANTS,
+                    filterElement = {
+                        FilterElementSlider(
+                            value = uiState.arguments.participants?.toFloat() ?: 0f,
+                            range = 1f..5f,
+                            onValueChange = {
+                                viewModel.updateArguments(
+                                    uiState.arguments.copy(
+                                        participants = it.toInt()
+                                    )
+                                )
+                            },
+                            steps = 3
+                        )
+                    },
+                    dismissRequest = { setFilter = null })
             }
 
             else -> {}
