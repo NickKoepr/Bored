@@ -20,6 +20,10 @@ class BoredMainViewModel(private val networkRepository: NetworkRepository) : Vie
         generateActivity()
     }
 
+    fun updateArguments(arguments: Arguments) {
+        _uiState.update { state -> state.copy(arguments = arguments) }
+    }
+
     fun generateActivity() {
         _uiState.update { status -> status.copy(status = Status.Loading) }
         viewModelScope.launch {

@@ -23,10 +23,15 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -41,6 +46,7 @@ import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.network.Status
 import nl.nickkoepr.bored.ui.ViewModelProvider
+import nl.nickkoepr.bored.utils.toComma
 import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
@@ -49,11 +55,13 @@ fun BoredMainScreen(
     viewModel: BoredMainViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    var setFilter by rememberSaveable { mutableStateOf<SelectedFilter?>(null) }
+
     Box(modifier = modifier) {
         Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
             ActivityFilterList(
                 selectedFilters = listOf(SelectedFilter.ACCESSIBILITY),
-                onClick = {},
+                onClick = { setFilter = it },
                 modifier = Modifier.padding(bottom = 15.dp)
             )
             when (val status = uiState.status) {
@@ -84,6 +92,79 @@ fun BoredMainScreen(
                 .align(Alignment.BottomEnd)
                 .padding(5.dp)
         )
+    }
+
+    @Composable
+    fun FilterElementSliderZeroToHundred(
+        value: ClosedFloatingPointRange<Float>,
+        onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        FilterElementSlider(
+            value = value,
+            range = 0f..100f,
+            steps = 10,
+            onValueChange = onValueChange,
+            isPercent = true,
+            modifier = modifier
+        )
+    }
+
+    if (setFilter != null) {
+        when (setFilter) {
+            SelectedFilter.ACCESSIBILITY -> {
+                FilterBottomSheetScaffold(
+                    selectedFilter = SelectedFilter.ACCESSIBILITY,
+                    filterElement = {
+                        val minAccessibility = uiState.arguments.minAccessibility.toPercent(0.0f)
+                        val maxAccessibility = uiState.arguments.maxAccessibility.toPercent(100f)
+                        FilterElementSliderZeroToHundred(
+                            value = minAccessibility..maxAccessibility,
+                            onValueChange = {
+                                viewModel.updateArguments(
+                                    uiState.arguments.copy(
+                                        minAccessibility = it.start.toComma(),
+                                        maxAccessibility = it.endInclusive.toComma()
+                                    )
+                                )
+
+                            }
+                        )
+                    },
+                    dismissRequest = { setFilter = null })
+            }
+
+            SelectedFilter.PRICE -> {
+                FilterBottomSheetScaffold(
+                    selectedFilter = SelectedFilter.PRICE,
+                    filterElement = {
+                        val minPrice = uiState.arguments.minPrice.toPercent(0.0f)
+                        val maxPrice = uiState.arguments.maxPrice.toPercent(100f)
+                        FilterElementSliderZeroToHundred(
+                            value = minPrice..maxPrice,
+                            onValueChange = {
+                                viewModel.updateArguments(
+                                    uiState.arguments.copy(
+                                        minPrice = it.start.toComma(),
+                                        maxPrice = it.endInclusive.toComma()
+                                    )
+                                )
+                            }
+                        )
+                    },
+                    dismissRequest = { setFilter = null })
+            }
+
+            SelectedFilter.TYPE -> {
+
+            }
+
+            SelectedFilter.PARTICIPANTS -> {
+
+            }
+
+            else -> {}
+        }
     }
 }
 
@@ -252,6 +333,71 @@ fun ErrorIndicator(modifier: Modifier = Modifier) {
             tint = MaterialTheme.colorScheme.primary
         )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilterBottomSheetScaffold(
+    selectedFilter: SelectedFilter,
+    filterElement: @Composable () -> Unit,
+    dismissRequest: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ModalBottomSheet(modifier = modifier, onDismissRequest = dismissRequest) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp, bottom = 80.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = selectedFilter.filterIcon),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(id = selectedFilter.filterName),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            filterElement()
+        }
+    }
+}
+
+@Composable
+fun FilterElementSlider(
+    value: ClosedFloatingPointRange<Float>,
+    range: ClosedFloatingPointRange<Float>,
+    steps: Int,
+    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
+    modifier: Modifier = Modifier,
+    isPercent: Boolean = false
+) {
+    Column(modifier = modifier) {
+        RangeSlider(
+            value = value,
+            valueRange = range,
+            onValueChange = onValueChange,
+            steps = steps
+        )
+
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Text(text = range.start.toInt().toString() + if (isPercent) "%" else "")
+            Text(text = range.endInclusive.toInt().toString() + if (isPercent) "%" else "")
+        }
+    }
+}
+
+@Preview
+@Composable
+fun FilterBottomSheetScaffoldPreview() {
+    FilterBottomSheetScaffold(SelectedFilter.PRICE, {}, {})
 }
 
 @Preview(showBackground = true)
