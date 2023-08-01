@@ -1,7 +1,5 @@
 package nl.nickkoepr.bored.ui.screens.main
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,19 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.RangeSlider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -55,6 +47,7 @@ fun BoredMainScreen(
     viewModel: BoredMainViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    // Used to communicate the selected filter from a callback to a composable function.
     var setFilter by rememberSaveable { mutableStateOf<SelectedFilter?>(null) }
 
     Box(modifier = modifier) {
@@ -91,22 +84,6 @@ fun BoredMainScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(5.dp)
-        )
-    }
-
-    @Composable
-    fun FilterElementSliderZeroToHundred(
-        value: ClosedFloatingPointRange<Float>,
-        onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
-        modifier: Modifier = Modifier
-    ) {
-        FilterElementSlider(
-            value = value,
-            range = 0f..100f,
-            steps = 10,
-            onValueChange = onValueChange,
-            isPercent = true,
-            modifier = modifier
         )
     }
 
@@ -199,60 +176,6 @@ fun GenerateActivityFab(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 /**
- * Row with all the possible filter chips.
- * @param selectedFilters list of all the filters that are active.
- * @param onClick runs when a user clicks on a filter chip.
- */
-@Composable
-fun ActivityFilterList(
-    selectedFilters: List<SelectedFilter>,
-    onClick: (SelectedFilter) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyRow(modifier = modifier) {
-        items(SelectedFilter.entries) { filter ->
-            ActivityFilterChip(
-                modifier = Modifier.padding(end = 10.dp),
-                selected = selectedFilters.contains(filter),
-                onClick = { onClick(filter) },
-                label = filter.filterName,
-                icon = filter.filterIcon
-            )
-        }
-    }
-}
-
-/**
- * Chip for the activity filters.
- * @param selected true if the filter is active, otherwise false.
- * @param onClick runs when a user clicks on the filter chip.
- * @param label string resource that is displayed on the filter chip.
- * @param icon drawable resource that is displayed on the filter chip.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ActivityFilterChip(
-    selected: Boolean,
-    onClick: () -> Unit,
-    @StringRes label: Int,
-    @DrawableRes icon: Int,
-    modifier: Modifier = Modifier
-) {
-    FilterChip(
-        modifier = modifier,
-        selected = selected,
-        onClick = onClick,
-        label = { Text(text = stringResource(id = label)) },
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null
-            )
-        }
-    )
-}
-
-/**
  * Get the ActivityStatItem for the given activity.
  * @param activity StatItem is generated from the given activity.
  */
@@ -332,65 +255,6 @@ fun ErrorIndicator(modifier: Modifier = Modifier) {
             contentDescription = stringResource(id = R.string.sync_error),
             tint = MaterialTheme.colorScheme.primary
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun FilterBottomSheetScaffold(
-    selectedFilter: SelectedFilter,
-    filterElement: @Composable () -> Unit,
-    dismissRequest: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ModalBottomSheet(modifier = modifier, onDismissRequest = dismissRequest) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp, bottom = 80.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painter = painterResource(id = selectedFilter.filterIcon),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = stringResource(id = selectedFilter.filterName),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            filterElement()
-        }
-    }
-}
-
-@Composable
-fun FilterElementSlider(
-    value: ClosedFloatingPointRange<Float>,
-    range: ClosedFloatingPointRange<Float>,
-    steps: Int,
-    onValueChange: (ClosedFloatingPointRange<Float>) -> Unit,
-    modifier: Modifier = Modifier,
-    isPercent: Boolean = false
-) {
-    Column(modifier = modifier) {
-        RangeSlider(
-            value = value,
-            valueRange = range,
-            onValueChange = onValueChange,
-            steps = steps
-        )
-
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = range.start.toInt().toString() + if (isPercent) "%" else "")
-            Text(text = range.endInclusive.toInt().toString() + if (isPercent) "%" else "")
-        }
     }
 }
 
