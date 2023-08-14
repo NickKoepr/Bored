@@ -60,6 +60,7 @@ fun BoredMainScreen(
                 onRemoveClick = { selectedFilter ->
                     viewModel.resetFilter(selectedFilter)
                 },
+                arguments = uiState.arguments,
                 modifier = Modifier.padding(bottom = 15.dp)
             )
             when (val status = uiState.status) {
@@ -141,13 +142,15 @@ fun BoredMainScreen(
                 FilterBottomSheetScaffold(
                     selectedFilter = SelectedFilter.TYPE,
                     filterElement = {
-                        FilterTypeList(selectedType = uiState.arguments.type, onTypeSelected = { type ->
-                            viewModel.updateArguments(
-                                uiState.arguments.copy(
-                                    type = type
+                        FilterTypeList(
+                            selectedType = uiState.arguments.type,
+                            onTypeSelected = { type ->
+                                viewModel.updateArguments(
+                                    uiState.arguments.copy(
+                                        type = type
+                                    )
                                 )
-                            )
-                        })
+                            })
                     },
                     dismissRequest = { setFilter = null })
             }

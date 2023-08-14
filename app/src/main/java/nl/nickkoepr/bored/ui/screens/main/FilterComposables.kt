@@ -28,14 +28,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import nl.nickkoepr.bored.R
+import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.model.Type
+import nl.nickkoepr.bored.utils.toPercentString
 
 /**
  * Row with all the possible filter chips.
  * @param selectedFilters list of all the filters that are active.
  * @param onClick runs when a user clicks on a filter chip.
+ * @param onRemoveClick runs when a user clicks on the remove button.
+ * @param arguments list of active arguments.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,6 +48,7 @@ fun ActivityFilterList(
     selectedFilters: List<SelectedFilter>,
     onClick: (SelectedFilter) -> Unit,
     onRemoveClick: (SelectedFilter) -> Unit,
+    arguments: Arguments,
     modifier: Modifier = Modifier
 ) {
     LazyRow(modifier = modifier) {
@@ -54,7 +60,44 @@ fun ActivityFilterList(
                     .height(38.dp),
                 selected = selectedFilter,
                 onClick = { onClick(filter) },
-                label = { Text(text = stringResource(id = filter.filterName)) },
+                label = {
+                    Row {
+                        Text(text = stringResource(id = filter.filterName))
+                        // Add the selected filter data (if selected) to the end of the filter
+                        // title.
+                        if (selectedFilter) {
+                            val dataText: String
+                            when (filter) {
+                                SelectedFilter.PRICE -> {
+                                    dataText = toPercentString(
+                                        arguments.minPrice,
+                                        arguments.maxPrice
+                                    )
+                                }
+
+                                SelectedFilter.TYPE -> {
+                                    dataText = stringResource(id = arguments.type!!.label)
+                                }
+
+                                SelectedFilter.ACCESSIBILITY -> {
+                                    dataText = toPercentString(
+                                        arguments.minAccessibility,
+                                        arguments.maxAccessibility
+                                    )
+                                }
+
+                                SelectedFilter.PARTICIPANTS -> {
+                                    dataText = arguments.participants.toString()
+                                }
+                            }
+                            Text(
+                                text = "($dataText)",
+                                modifier = Modifier.padding(start = 4.dp),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(id = filter.filterIcon),
@@ -124,12 +167,14 @@ fun FilterBottomSheetScaffold(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp, bottom = 80.dp)
+                .padding(start = 15.dp, end = 15.dp, bottom = 60.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp)
             ) {
                 Icon(
                     painter = painterResource(id = selectedFilter.filterIcon),
@@ -247,7 +292,7 @@ fun FilterTypeList(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 5.dp, bottom = 5.dp)
+                    .padding(top = 5.dp)
                     .clickable {
                         onTypeSelected(type)
                     },
