@@ -1,7 +1,5 @@
 package nl.nickkoepr.bored.ui.screens.main
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.model.Arguments
@@ -116,36 +115,6 @@ fun ActivityFilterList(
             )
         }
     }
-}
-
-/**
- * Chip for the activity filters.
- * @param selected true if the filter is active, otherwise false.
- * @param onClick runs when a user clicks on the filter chip.
- * @param label string resource that is displayed on the filter chip.
- * @param icon drawable resource that is displayed on the filter chip.
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ActivityFilterChip(
-    selected: Boolean,
-    onClick: () -> Unit,
-    @StringRes label: Int,
-    @DrawableRes icon: Int,
-    modifier: Modifier = Modifier
-) {
-    FilterChip(
-        modifier = modifier,
-        selected = selected,
-        onClick = onClick,
-        label = { Text(text = stringResource(id = label)) },
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null
-            )
-        }
-    )
 }
 
 /**
@@ -307,4 +276,28 @@ fun FilterTypeList(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ActivityFilterListPreview() {
+    ActivityFilterList(selectedFilters = listOf(), onClick = {}, onRemoveClick = {}, arguments = Arguments())
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FilterElementRangeSliderPreview() {
+    FilterElementRangeSlider(value = 10f..20f, range = 0f..100f, steps = 1, onValueChange = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FilterElementSliderPreview() {
+    FilterElementSlider(value = 1f, range = 0f..5f, steps = 1, onValueChange = {})
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FilterTypeListPreview() {
+    FilterTypeList(selectedType = Type.CHARITY, onTypeSelected = {})
 }

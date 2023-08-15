@@ -293,22 +293,10 @@ fun ErrorIndicator(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
-@Composable
-fun FilterBottomSheetScaffoldPreview() {
-    FilterBottomSheetScaffold(SelectedFilter.PRICE, {}, {})
-}
-
 @Preview(showBackground = true)
 @Composable
 fun BoredActivityTextPreview() {
     BoredActivityText(DummyActivities.activities[0])
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ActivityFilterChipPreview() {
-    ActivityFilterChip(false, {}, R.string.accessibility, R.drawable.star_full)
 }
 
 @Preview(showBackground = true)
