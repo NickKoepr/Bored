@@ -38,11 +38,13 @@ import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.network.Status
 import nl.nickkoepr.bored.ui.ViewModelProvider
+import nl.nickkoepr.bored.ui.windowSize.WindowSize
 import nl.nickkoepr.bored.utils.toComma
 import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
 fun BoredMainScreen(
+    windowSize: WindowSize,
     modifier: Modifier = Modifier,
     viewModel: BoredMainViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
@@ -97,6 +99,7 @@ fun BoredMainScreen(
         when (setFilter) {
             SelectedFilter.ACCESSIBILITY -> {
                 FilterBottomSheetScaffold(
+                    windowSize = windowSize,
                     selectedFilter = SelectedFilter.ACCESSIBILITY,
                     filterElement = {
                         val minAccessibility = uiState.arguments.minAccessibility.toPercent(0.0f)
@@ -119,6 +122,7 @@ fun BoredMainScreen(
 
             SelectedFilter.PRICE -> {
                 FilterBottomSheetScaffold(
+                    windowSize = windowSize,
                     selectedFilter = SelectedFilter.PRICE,
                     filterElement = {
                         val minPrice = uiState.arguments.minPrice.toPercent(0.0f)
@@ -140,6 +144,7 @@ fun BoredMainScreen(
 
             SelectedFilter.TYPE -> {
                 FilterBottomSheetScaffold(
+                    windowSize = windowSize,
                     selectedFilter = SelectedFilter.TYPE,
                     filterElement = {
                         FilterTypeList(
@@ -157,6 +162,7 @@ fun BoredMainScreen(
 
             SelectedFilter.PARTICIPANTS -> {
                 FilterBottomSheetScaffold(
+                    windowSize = windowSize,
                     selectedFilter = SelectedFilter.PARTICIPANTS,
                     filterElement = {
                         FilterElementSlider(

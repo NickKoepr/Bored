@@ -57,6 +57,7 @@ fun BoredApp(windowSize: WindowSize, modifier: Modifier = Modifier) {
                 })
             }
             BoredMainScreen(
+                windowSize = windowSize,
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxSize()

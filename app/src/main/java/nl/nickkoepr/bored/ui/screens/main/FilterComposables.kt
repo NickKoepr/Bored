@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.model.Type
+import nl.nickkoepr.bored.ui.windowSize.WindowSize
 import nl.nickkoepr.bored.utils.toPercentString
 
 /**
@@ -127,6 +128,7 @@ fun ActivityFilterList(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterBottomSheetScaffold(
+    windowSize: WindowSize,
     selectedFilter: SelectedFilter,
     filterElement: @Composable () -> Unit,
     dismissRequest: () -> Unit,
@@ -136,7 +138,11 @@ fun FilterBottomSheetScaffold(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp, bottom = 60.dp)
+                .padding(
+                    start = 15.dp,
+                    end = 15.dp,
+                    bottom = if (windowSize == WindowSize.COMPACT) 60.dp else 110.dp
+                )
         ) {
             Row(
                 horizontalArrangement = Arrangement.Center,
@@ -281,7 +287,12 @@ fun FilterTypeList(
 @Preview(showBackground = true)
 @Composable
 fun ActivityFilterListPreview() {
-    ActivityFilterList(selectedFilters = listOf(), onClick = {}, onRemoveClick = {}, arguments = Arguments())
+    ActivityFilterList(
+        selectedFilters = listOf(),
+        onClick = {},
+        onRemoveClick = {},
+        arguments = Arguments()
+    )
 }
 
 @Preview(showBackground = true)
