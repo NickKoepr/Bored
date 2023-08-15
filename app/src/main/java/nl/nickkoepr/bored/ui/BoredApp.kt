@@ -1,6 +1,10 @@
 package nl.nickkoepr.bored.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -10,6 +14,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -26,27 +32,36 @@ import androidx.compose.ui.unit.dp
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.ui.navigation.Screens
 import nl.nickkoepr.bored.ui.screens.main.BoredMainScreen
+import nl.nickkoepr.bored.ui.windowSize.WindowSize
 
 @Composable
-fun BoredApp(modifier: Modifier = Modifier) {
+fun BoredApp(windowSize: WindowSize, modifier: Modifier = Modifier) {
     var selectedBottomScreen by rememberSaveable { mutableStateOf(Screens.HOME) }
     Scaffold(
         topBar = {
             TopBar(R.string.app_name, false, {}, {})
         },
         bottomBar = {
-            BottomBar(selectedBottomScreen, { selectedScreen ->
-                selectedBottomScreen = selectedScreen
-            })
+            if (windowSize != WindowSize.EXPANDED) {
+                BottomBar(selectedBottomScreen, { selectedScreen ->
+                    selectedBottomScreen = selectedScreen
+                })
+            }
         },
         modifier = modifier
     ) { paddingValues ->
-        BoredMainScreen(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(10.dp)
-                .fillMaxSize()
-        )
+        Row(modifier = Modifier.padding(paddingValues)) {
+            if (windowSize == WindowSize.EXPANDED) {
+                SideNavigationRail(selected = selectedBottomScreen, onSelect = { selectedScreen ->
+                    selectedBottomScreen = selectedScreen
+                })
+            }
+            BoredMainScreen(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxSize()
+            )
+        }
     }
 }
 
@@ -127,6 +142,34 @@ fun BottomBar(
                     Text(text = stringResource(id = selectedScreen.navigationName))
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun SideNavigationRail(
+    selected: Screens,
+    onSelect: (Screens) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    NavigationRail(modifier = modifier) {
+        Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+            Screens.entries.forEach { selectedScreen ->
+                NavigationRailItem(
+                    modifier = Modifier.padding(top = 10.dp),
+                    selected = selected == selectedScreen,
+                    onClick = { onSelect(selectedScreen) },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = selectedScreen.navigationIcon),
+                            contentDescription = null
+                        )
+                    },
+                    label = {
+                        Text(text = stringResource(id = selectedScreen.navigationName))
+                    }
+                )
+            }
         }
     }
 }
