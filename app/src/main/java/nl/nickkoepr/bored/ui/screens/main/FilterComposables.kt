@@ -62,7 +62,7 @@ fun ActivityFilterList(
                 onClick = { onClick(filter) },
                 label = {
                     Row {
-                        Text(text = stringResource(id = filter.filterName))
+                        Text(text = stringResource(id = filter.filterName), style = MaterialTheme.typography.labelLarge)
                         // Add the selected filter data (if selected) to the end of the filter
                         // title.
                         if (selectedFilter) {
@@ -194,8 +194,8 @@ fun FilterElementRangeSlider(
         )
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = range.start.toInt().toString() + if (isPercent) "%" else "")
-            Text(text = range.endInclusive.toInt().toString() + if (isPercent) "%" else "")
+            Text(text = range.start.toInt().toString() + if (isPercent) "%" else "", style = MaterialTheme.typography.labelLarge)
+            Text(text = range.endInclusive.toInt().toString() + if (isPercent) "%" else "", style = MaterialTheme.typography.labelLarge)
         }
     }
 }

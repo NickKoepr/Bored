@@ -140,7 +140,7 @@ fun BottomBar(
                     )
                 },
                 label = {
-                    Text(text = stringResource(id = selectedScreen.navigationName))
+                    Text(text = stringResource(id = selectedScreen.navigationName), style = MaterialTheme.typography.labelMedium)
                 }
             )
         }
