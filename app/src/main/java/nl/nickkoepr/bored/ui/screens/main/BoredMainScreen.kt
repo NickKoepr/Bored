@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
@@ -26,6 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import nl.nickkoepr.bored.R
+import nl.nickkoepr.bored.intents.openLink
 import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.network.Status
@@ -69,6 +72,12 @@ fun BoredMainScreen(
             when (val status = uiState.status) {
                 is Status.Success -> {
                     BoredActivityText(activity = status.activity)
+                    if (status.activity.link.isNotBlank()) {
+                        val context = LocalContext.current
+                        LinkButton(onClick = {
+                            openLink(context, status.activity.link)
+                        }, modifier = Modifier.padding(top = 8.dp))
+                    }
                     Divider(
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         modifier = Modifier.padding(top = 40.dp, bottom = 25.dp)
@@ -299,6 +308,23 @@ fun ErrorIndicator(modifier: Modifier = Modifier) {
             tint = MaterialTheme.colorScheme.primary
         )
     }
+}
+
+/**
+ * Button that can be showed when a user is able to open a link.
+ * @param onClick function that runs when a user clicks on this button
+ */
+@Composable
+fun LinkButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(onClick = onClick, modifier = modifier) {
+        Text(text = stringResource(id = R.string.open_link))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LinkButtonPreview() {
+    LinkButton(onClick = {})
 }
 
 @Preview(showBackground = true)
