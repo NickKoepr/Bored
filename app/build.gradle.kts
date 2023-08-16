@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.navigation:navigation-compose:2.6.0")
     implementation("androidx.compose.material3:material3-window-size-class:1.1.1")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.33.0-alpha")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.5-beta")
 
     // Retrofit
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
