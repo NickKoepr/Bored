@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.model.Type
+import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import nl.nickkoepr.bored.ui.windowSize.WindowSize
 import nl.nickkoepr.bored.utils.toPercentString
 

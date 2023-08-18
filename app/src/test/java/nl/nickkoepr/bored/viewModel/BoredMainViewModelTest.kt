@@ -11,7 +11,7 @@ import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.network.Status
 import nl.nickkoepr.bored.rules.TestDispatcherRule
 import nl.nickkoepr.bored.ui.screens.main.BoredMainViewModel
-import nl.nickkoepr.bored.ui.screens.main.SelectedFilter
+import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

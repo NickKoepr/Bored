@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.data.network.repository.NetworkRepository
 import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.network.Status
+import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import retrofit2.HttpException
 import java.io.IOException
 

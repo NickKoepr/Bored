@@ -21,30 +21,41 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.ui.navigation.Screens
+import nl.nickkoepr.bored.ui.screens.favorites.FavoritesScreen
 import nl.nickkoepr.bored.ui.screens.main.BoredMainScreen
 import nl.nickkoepr.bored.ui.windowSize.WindowSize
 
 @Composable
-fun BoredApp(windowSize: WindowSize, modifier: Modifier = Modifier) {
-    var selectedBottomScreen by rememberSaveable { mutableStateOf(Screens.HOME) }
+fun BoredApp(
+    windowSize: WindowSize,
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val selectedScreen =
+        Screens.valueOf(backStackEntry?.destination?.route ?: "HOME")
+
     Scaffold(
         topBar = {
             TopBar(R.string.app_name, false, {}, {})
         },
         bottomBar = {
             if (windowSize != WindowSize.EXPANDED) {
-                BottomBar(selectedBottomScreen, { selectedScreen ->
-                    selectedBottomScreen = selectedScreen
+                BottomBar(selectedScreen, { screen ->
+                    navController.popBackStack()
+                    navController.navigate(screen.name)
                 })
             }
         },
@@ -52,16 +63,28 @@ fun BoredApp(windowSize: WindowSize, modifier: Modifier = Modifier) {
     ) { paddingValues ->
         Row(modifier = Modifier.padding(paddingValues)) {
             if (windowSize == WindowSize.EXPANDED) {
-                SideNavigationRail(selected = selectedBottomScreen, onSelect = { selectedScreen ->
-                    selectedBottomScreen = selectedScreen
+                SideNavigationRail(selected = selectedScreen, onSelect = { screen ->
+                    navController.popBackStack()
+                    navController.navigate(screen.name)
                 })
             }
-            BoredMainScreen(
-                windowSize = windowSize,
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxSize()
-            )
+            NavHost(navController = navController, startDestination = Screens.HOME.name) {
+                composable(route = Screens.HOME.name) {
+                    BoredMainScreen(
+                        windowSize = windowSize,
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxSize()
+                    )
+                }
+                composable(route = Screens.FAVOURITES.name) {
+                    FavoritesScreen(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxSize()
+                    )
+                }
+            }
         }
     }
 }
@@ -140,7 +163,10 @@ fun BottomBar(
                     )
                 },
                 label = {
-                    Text(text = stringResource(id = selectedScreen.navigationName), style = MaterialTheme.typography.labelMedium)
+                    Text(
+                        text = stringResource(id = selectedScreen.navigationName),
+                        style = MaterialTheme.typography.labelMedium
+                    )
                 }
             )
         }

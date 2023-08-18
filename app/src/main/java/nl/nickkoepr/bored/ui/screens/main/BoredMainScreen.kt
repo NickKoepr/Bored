@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,7 @@ import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.network.Status
 import nl.nickkoepr.bored.ui.ViewModelProvider
+import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import nl.nickkoepr.bored.ui.windowSize.WindowSize
 import nl.nickkoepr.bored.utils.toComma
 import nl.nickkoepr.bored.utils.toPercent
@@ -199,14 +201,19 @@ fun BoredMainScreen(
 
 /**
  * Display activity text based on given activity.
- * @param activity activity that has to be displayed.
+ * @param activity activity that has to be displayed
+ * @param textStyle the text style of the activity test (default displayLarge)
  */
 @Composable
-fun BoredActivityText(activity: Activity, modifier: Modifier = Modifier) {
+fun BoredActivityText(
+    activity: Activity,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.displayLarge
+) {
     Text(
         modifier = modifier.padding(end = 20.dp),
         text = activity.activity,
-        style = MaterialTheme.typography.displayLarge,
+        style = textStyle,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }

@@ -46,6 +46,12 @@ val Typography = Typography(
         fontStyle = FontStyle.Normal,
         fontSize = 20.sp
     ),
+    displayMedium = TextStyle(
+        fontFamily = robotoFontFamily,
+        fontWeight = FontWeight.Medium,
+        fontStyle = FontStyle.Normal,
+        fontSize = 35.sp
+    ),
     displayLarge = TextStyle(
         fontFamily = robotoFontFamily,
         fontWeight = FontWeight.ExtraBold,

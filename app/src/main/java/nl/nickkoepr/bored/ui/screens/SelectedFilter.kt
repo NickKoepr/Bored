@@ -1,4 +1,4 @@
-package nl.nickkoepr.bored.ui.screens.main
+package nl.nickkoepr.bored.ui.screens
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
