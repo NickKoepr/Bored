@@ -1,6 +1,8 @@
 package nl.nickkoepr.bored.model
 
 import androidx.annotation.FloatRange
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 /**
@@ -15,6 +17,7 @@ import kotlinx.serialization.Serializable
  * @param link optional link with more information about the activity.
  */
 @Serializable
+@Entity("activity")
 data class Activity(
     val key: String,
     val activity: String,
@@ -22,7 +25,9 @@ data class Activity(
     val type: Type,
     val participants: Int,
     @FloatRange(0.0, 1.0) val price: Double,
-    val link: String
+    val link: String,
+    @PrimaryKey(autoGenerate = true)
+    val primaryKey: Int = 0
 )
 
 object DummyActivities {

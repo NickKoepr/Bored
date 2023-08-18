@@ -6,12 +6,16 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import nl.nickkoepr.bored.BoredApplication
 import nl.nickkoepr.bored.data.AppContainer
+import nl.nickkoepr.bored.ui.screens.favorites.FavoritesViewModel
 import nl.nickkoepr.bored.ui.screens.main.BoredMainViewModel
 
 object ViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             BoredMainViewModel(getAppContainer().networkRepository)
+        }
+        initializer {
+            FavoritesViewModel(getAppContainer().databaseRepository)
         }
     }
 }

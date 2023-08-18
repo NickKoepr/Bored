@@ -10,6 +10,6 @@ class BoredApplication : Application() {
         private set
     override fun onCreate() {
         super.onCreate()
-        appContainer = BoredAppContainer()
+        appContainer = BoredAppContainer(this)
     }
 }
