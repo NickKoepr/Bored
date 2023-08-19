@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +29,6 @@ import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.ui.ViewModelProvider
 import nl.nickkoepr.bored.ui.screens.SelectedFilter
-import nl.nickkoepr.bored.ui.screens.main.BoredActivityText
 import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
@@ -55,8 +53,7 @@ fun FavoritesScreen(
 @Composable
 fun FavoriteCard(activity: Activity, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier.padding(
@@ -66,9 +63,8 @@ fun FavoriteCard(activity: Activity, modifier: Modifier = Modifier) {
                 bottom = 10.dp
             )
         ) {
-            BoredActivityText(
-                activity = activity,
-                textStyle = MaterialTheme.typography.displayMedium
+            BoredFavoriteActivityText(
+                activity = activity
             )
             Divider(
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -135,6 +131,20 @@ fun ActivityStatsSmallItem(
         )
     }
 }
+
+@Composable
+fun BoredFavoriteActivityText(
+    activity: Activity,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        modifier = modifier.padding(end = 20.dp),
+        text = activity.activity,
+        style = MaterialTheme.typography.displayMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant
+    )
+}
+
 
 @Preview(showBackground = true)
 @Composable

@@ -5,18 +5,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +35,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -202,18 +208,45 @@ fun BoredMainScreen(
 /**
  * Display activity text based on given activity.
  * @param activity activity that has to be displayed
- * @param textStyle the text style of the activity test (default displayLarge)
  */
 @Composable
 fun BoredActivityText(
     activity: Activity,
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = MaterialTheme.typography.displayLarge
+    modifier: Modifier = Modifier
 ) {
+    // Source: https://stackoverflow.com/questions/67605986/add-icon-at-last-word-of-text-in-jetpack-compose
+
+    // Create inline content to display the favorite star behind the activity.
+    val id = "boredActivityInline"
+    val activityText = buildAnnotatedString {
+        append(activity.activity)
+        appendInlineContent(id, "[icon]")
+    }
+    val inlineContent = mapOf(
+        Pair(
+            id,
+            InlineTextContent(
+                Placeholder(
+                    width = 45.sp,
+                    height = 45.sp,
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
+                )
+            ) {
+                //TODO: Implementation of the favorite star button.
+                FavoriteStar(
+                    selected = false,
+                    onClick = { },
+                    modifier = Modifier.padding(start = 4.dp)
+                )
+            }
+        )
+    )
+
     Text(
         modifier = modifier.padding(end = 20.dp),
-        text = activity.activity,
-        style = textStyle,
+        text = activityText,
+        inlineContent = inlineContent,
+        style = MaterialTheme.typography.displayLarge,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }
@@ -326,6 +359,29 @@ fun LinkButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(onClick = onClick, modifier = modifier) {
         Text(text = stringResource(id = R.string.open_link))
     }
+}
+
+/**
+ * Button that displays a filled or outlined star to indicate if the activity is a favorite or not.
+ * @param selected true if the activity is selected as favorite, otherwise false.
+ * @param onClick runs when a user clicks on the star button. This function also gives the selected state.
+ */
+@Composable
+fun FavoriteStar(selected: Boolean, onClick: (Boolean) -> Unit, modifier: Modifier = Modifier) {
+    IconButton(modifier = modifier, onClick = { onClick(!selected) }) {
+        Icon(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(id = if (selected) R.drawable.star_full else R.drawable.star_outline),
+            contentDescription = stringResource(id = if (selected) R.string.remove_favorite else R.string.favorite),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteStarPreview() {
+    FavoriteStar(selected = false, onClick = {})
 }
 
 @Preview(showBackground = true)
