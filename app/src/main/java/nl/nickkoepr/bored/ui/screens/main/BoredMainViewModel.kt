@@ -2,23 +2,55 @@ package nl.nickkoepr.bored.ui.screens.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import nl.nickkoepr.bored.data.database.repository.DatabaseRepository
 import nl.nickkoepr.bored.data.network.repository.NetworkRepository
+import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.network.Status
 import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import retrofit2.HttpException
 import java.io.IOException
 
-class BoredMainViewModel(private val networkRepository: NetworkRepository) : ViewModel() {
+class BoredMainViewModel(
+    private val networkRepository: NetworkRepository,
+    private val databaseRepository: DatabaseRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(BoredMainUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
         generateActivity()
+    }
+
+    /**
+     * Receive a activity by his key. This flow will return null if no activity is found.
+     * @param id the key of the activity.
+     */
+    fun getActivityById(id: String): Flow<Activity?> = databaseRepository.getActivityByKey(id)
+
+    /**
+     * Add the given activity to the favorites list.
+     * @param activity activity to add to the favorite list
+     */
+    fun favoriteActivity(activity: Activity) {
+        viewModelScope.launch {
+            databaseRepository.addFavorite(activity)
+        }
+    }
+
+    /**
+     * Remove the given activity from the favorites list.
+     * @param activity activity to remove from the favorites list
+     */
+    fun unfavoriteActivity(activity: Activity) {
+        viewModelScope.launch {
+            databaseRepository.removeFavorite(activity)
+        }
     }
 
     /**

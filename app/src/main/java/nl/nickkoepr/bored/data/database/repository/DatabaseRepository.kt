@@ -24,4 +24,10 @@ interface DatabaseRepository {
      * @return [Flow] that contains a list of the users favorite activities.
      */
     fun getFavorites(): Flow<List<Activity>>
+
+    /**
+     * Receive a activity by his key. This flow will return null if no activity is found.
+     * @param key the activity key.
+     */
+    fun getActivityByKey(key: String): Flow<Activity?>
 }

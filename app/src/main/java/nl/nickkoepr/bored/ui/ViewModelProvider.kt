@@ -12,7 +12,10 @@ import nl.nickkoepr.bored.ui.screens.main.BoredMainViewModel
 object ViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            BoredMainViewModel(getAppContainer().networkRepository)
+            BoredMainViewModel(
+                getAppContainer().networkRepository,
+                getAppContainer().databaseRepository
+            )
         }
         initializer {
             FavoritesViewModel(getAppContainer().databaseRepository)

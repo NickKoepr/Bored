@@ -1,7 +1,9 @@
 package nl.nickkoepr.bored.model
 
 import androidx.annotation.FloatRange
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
@@ -17,8 +19,9 @@ import kotlinx.serialization.Serializable
  * @param link optional link with more information about the activity.
  */
 @Serializable
-@Entity("activity")
+@Entity("activity", indices = [Index(value = ["key"], unique = true)])
 data class Activity(
+    @ColumnInfo(name = "key")
     val key: String,
     val activity: String,
     @FloatRange(0.0, 1.0) val accessibility: Double,

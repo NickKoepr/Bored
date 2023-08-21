@@ -79,7 +79,26 @@ fun BoredMainScreen(
             )
             when (val status = uiState.status) {
                 is Status.Success -> {
-                    BoredActivityText(activity = status.activity)
+                    val activityById =
+                        viewModel.getActivityById(status.activity.key).collectAsState(
+                            initial = null
+                        )
+                    BoredActivityText(
+                        activity = status.activity,
+                        favoriteSelected = activityById.value != null,
+                        onFavoriteClick = { isFavorite ->
+                            if (isFavorite) {
+                                viewModel.favoriteActivity(status.activity)
+                            } else {
+                                // Removing the activity received by the getActivityById() function
+                                // makes sure that the activity has the right primary key in the database.
+                                activityById.value?.let { activity ->
+                                    viewModel.unfavoriteActivity(activity)
+                                }
+                            }
+                        }
+                    )
+
                     if (status.activity.link.isNotBlank()) {
                         val context = LocalContext.current
                         LinkButton(onClick = {
@@ -208,10 +227,16 @@ fun BoredMainScreen(
 /**
  * Display activity text based on given activity.
  * @param activity activity that has to be displayed
+ * @param favoriteSelected true if the activity is selected as favorite, otherwise false.
+ * @param onFavoriteClick function runs when a user clicks on the star icon button. This function
+ * also gives a boolean to indicate if the activity is added to the favorite list (true) or
+ * removed (false) from this list.
  */
 @Composable
 fun BoredActivityText(
     activity: Activity,
+    favoriteSelected: Boolean,
+    onFavoriteClick: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Source: https://stackoverflow.com/questions/67605986/add-icon-at-last-word-of-text-in-jetpack-compose
@@ -232,10 +257,9 @@ fun BoredActivityText(
                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center
                 )
             ) {
-                //TODO: Implementation of the favorite star button.
                 FavoriteStar(
-                    selected = false,
-                    onClick = { },
+                    selected = favoriteSelected,
+                    onClick = onFavoriteClick,
                     modifier = Modifier.padding(start = 4.dp)
                 )
             }
@@ -393,7 +417,7 @@ fun LinkButtonPreview() {
 @Preview(showBackground = true)
 @Composable
 fun BoredActivityTextPreview() {
-    BoredActivityText(DummyActivities.activities[0])
+    BoredActivityText(DummyActivities.activities[0], false, {})
 }
 
 @Preview(showBackground = true)

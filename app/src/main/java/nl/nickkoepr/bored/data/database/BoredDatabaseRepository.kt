@@ -8,4 +8,5 @@ class BoredDatabaseRepository(private val boredDao: BoredDao): DatabaseRepositor
     override suspend fun addFavorite(activity: Activity) = boredDao.addFavorite(activity)
     override suspend fun removeFavorite(activity: Activity) = boredDao.removeFavorite(activity)
     override fun getFavorites(): Flow<List<Activity>> = boredDao.getFavorites()
+    override fun getActivityByKey(key: String): Flow<Activity?> = boredDao.getActivityByKey(key)
 }

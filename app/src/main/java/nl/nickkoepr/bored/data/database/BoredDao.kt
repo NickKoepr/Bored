@@ -17,4 +17,7 @@ interface BoredDao {
 
     @Query("SELECT * FROM activity")
     fun getFavorites(): Flow<List<Activity>>
+
+    @Query("SELECT * FROM activity WHERE `key` = :key")
+    fun getActivityByKey(key: String): Flow<Activity?>
 }
