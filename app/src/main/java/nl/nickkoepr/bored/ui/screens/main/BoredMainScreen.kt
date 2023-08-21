@@ -79,20 +79,19 @@ fun BoredMainScreen(
             )
             when (val status = uiState.status) {
                 is Status.Success -> {
-                    val activityById =
-                        viewModel.getActivityById(status.activity.key).collectAsState(
-                            initial = null
-                        )
+                    val activityById by viewModel
+                        .getActivityById(status.activity.key)
+                        .collectAsState(null)
                     BoredActivityText(
                         activity = status.activity,
-                        favoriteSelected = activityById.value != null,
+                        favoriteSelected = activityById != null,
                         onFavoriteClick = { isFavorite ->
                             if (isFavorite) {
                                 viewModel.favoriteActivity(status.activity)
                             } else {
                                 // Removing the activity received by the getActivityById() function
                                 // makes sure that the activity has the right primary key in the database.
-                                activityById.value?.let { activity ->
+                                activityById?.let { activity ->
                                     viewModel.unfavoriteActivity(activity)
                                 }
                             }
