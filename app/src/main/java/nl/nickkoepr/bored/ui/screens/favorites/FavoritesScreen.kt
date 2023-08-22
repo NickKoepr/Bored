@@ -1,5 +1,6 @@
 package nl.nickkoepr.bored.ui.screens.favorites
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,6 +35,7 @@ import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.ui.ViewModelProvider
 import nl.nickkoepr.bored.ui.screens.SelectedFilter
+import nl.nickkoepr.bored.ui.screens.main.ActivityStats
 import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
@@ -57,8 +62,9 @@ fun FavoritesScreen(
  */
 @Composable
 fun FavoriteCard(activity: Activity, modifier: Modifier = Modifier) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
     Card(
-        modifier = modifier
+        modifier = modifier.clickable { expanded = !expanded }
     ) {
         Column(
             modifier = Modifier.padding(
@@ -75,7 +81,11 @@ fun FavoriteCard(activity: Activity, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(top = 14.dp, bottom = 10.dp)
             )
-            ActivityStatsSmallOverview(activity = activity)
+            if (expanded) {
+                ActivityStats(activity = activity)
+            } else {
+                ActivityStatsSmallOverview(activity = activity)
+            }
         }
     }
 }
@@ -92,12 +102,12 @@ fun ActivityStatsSmallOverview(activity: Activity, modifier: Modifier = Modifier
             value = activity.accessibility.toPercent()
         )
         ActivityStatsSmallItem(
-            selectedFilter = SelectedFilter.PARTICIPANTS,
-            value = activity.participants.toString()
-        )
-        ActivityStatsSmallItem(
             selectedFilter = SelectedFilter.PRICE,
             value = activity.price.toPercent()
+        )
+        ActivityStatsSmallItem(
+            selectedFilter = SelectedFilter.PARTICIPANTS,
+            value = activity.participants.toString()
         )
         ActivityStatsSmallItem(
             selectedFilter = SelectedFilter.TYPE,
