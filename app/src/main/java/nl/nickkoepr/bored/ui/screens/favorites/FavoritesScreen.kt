@@ -16,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,8 +38,11 @@ fun FavoritesScreen(
     modifier: Modifier = Modifier,
     viewModel: FavoritesViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
+    val favoriteActivityList by viewModel.getFavoriteActivities()
+        .collectAsState(initial = emptyList())
+
     LazyColumn(modifier = modifier) {
-        items(DummyActivities.activities) { activity ->
+        items(favoriteActivityList) { activity ->
             FavoriteCard(
                 activity = activity,
                 modifier = Modifier.padding(bottom = 15.dp, start = 12.dp, end = 12.dp)
