@@ -6,7 +6,8 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import nl.nickkoepr.bored.dummy.DummyActivity
 import nl.nickkoepr.bored.dummy.DummyArguments
-import nl.nickkoepr.bored.dummy.network.DummyNetworkRepository
+import nl.nickkoepr.bored.dummy.repositories.DummyDatabaseRepository
+import nl.nickkoepr.bored.dummy.repositories.DummyNetworkRepository
 import nl.nickkoepr.bored.model.Arguments
 import nl.nickkoepr.bored.network.Status
 import nl.nickkoepr.bored.rules.TestDispatcherRule
@@ -24,7 +25,7 @@ class BoredMainViewModelTest {
 
     @Before
     fun init() {
-        viewModel = BoredMainViewModel(DummyNetworkRepository())
+        viewModel = BoredMainViewModel(DummyNetworkRepository(), DummyDatabaseRepository())
     }
 
     @Test

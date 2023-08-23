@@ -218,7 +218,7 @@ fun BoredFavoriteActivityText(
 }
 
 /**
- * Item that displays a no favorites message when a user has no acitvities in his favorite
+ * Item that displays a no favorites message when a user has no activities in his favorite
  * list.
  */
 @Composable

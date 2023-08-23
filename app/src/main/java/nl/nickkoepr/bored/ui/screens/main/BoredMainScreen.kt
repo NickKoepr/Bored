@@ -393,7 +393,9 @@ fun LinkButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
  */
 @Composable
 fun FavoriteStar(selected: Boolean, onClick: (Boolean) -> Unit, modifier: Modifier = Modifier) {
-    IconButton(modifier = modifier, onClick = { onClick(!selected) }) {
+    IconButton(
+        modifier = modifier.testTag("favoriteStarIconButton"),
+        onClick = { onClick(!selected) }) {
         Icon(
             modifier = Modifier.fillMaxSize(),
             painter = painterResource(id = if (selected) R.drawable.star_full else R.drawable.star_outline),

@@ -14,7 +14,7 @@ object DummyActivity {
         link = ""
     )
     val activity2 = Activity(
-        key = "8503795",
+        key = "8503796",
         activity = "Take a spontaneous road trip with some friends",
         type = Type.SOCIAL,
         participants = 4,
