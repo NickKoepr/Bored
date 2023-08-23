@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -236,7 +237,8 @@ fun BoredActivityText(
     activity: Activity,
     favoriteSelected: Boolean,
     onFavoriteClick: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.displayLarge
 ) {
     // Source: https://stackoverflow.com/questions/67605986/add-icon-at-last-word-of-text-in-jetpack-compose
 
@@ -251,8 +253,8 @@ fun BoredActivityText(
             id,
             InlineTextContent(
                 Placeholder(
-                    width = 45.sp,
-                    height = 45.sp,
+                    width = 35.sp,
+                    height = 35.sp,
                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center
                 )
             ) {
@@ -266,10 +268,10 @@ fun BoredActivityText(
     )
 
     Text(
-        modifier = modifier.padding(end = 20.dp),
+        modifier = modifier,
         text = activityText,
         inlineContent = inlineContent,
-        style = MaterialTheme.typography.displayLarge,
+        style = style,
         color = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }

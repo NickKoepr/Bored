@@ -9,4 +9,8 @@ class FavoritesViewModel(private val databaseRepository: DatabaseRepository) : V
     fun getFavoriteActivities(): Flow<List<Activity>> {
         return databaseRepository.getFavorites()
     }
+
+    suspend fun removeFavoriteActivity(activity: Activity) {
+        databaseRepository.removeFavorite(activity)
+    }
 }

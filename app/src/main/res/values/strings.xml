@@ -26,4 +26,6 @@
 
     <string name="sync_error">There was an error while fetching data. Please try again.</string>
     <string name="remove_filter">remove filter</string>
+
+    <string name="remove_favorite_toast">Favorite activity removed</string>
 </resources>

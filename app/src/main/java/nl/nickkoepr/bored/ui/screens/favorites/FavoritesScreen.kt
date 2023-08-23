@@ -1,5 +1,10 @@
 package nl.nickkoepr.bored.ui.screens.favorites
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -31,11 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.ui.ViewModelProvider
 import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import nl.nickkoepr.bored.ui.screens.main.ActivityStats
+import nl.nickkoepr.bored.ui.screens.main.BoredActivityText
 import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
@@ -48,8 +56,15 @@ fun FavoritesScreen(
 
     LazyColumn(modifier = modifier) {
         items(favoriteActivityList) { activity ->
+            val coroutineScore = rememberCoroutineScope()
             FavoriteCard(
                 activity = activity,
+                favoriteSelected = true,
+                onFavoriteClick = {
+                    coroutineScore.launch {
+                        viewModel.removeFavoriteActivity(activity)
+                    }
+                },
                 modifier = Modifier.padding(bottom = 15.dp, start = 12.dp, end = 12.dp)
             )
         }
@@ -61,7 +76,12 @@ fun FavoritesScreen(
  * @param activity activity that has to be displayed on the card.
  */
 @Composable
-fun FavoriteCard(activity: Activity, modifier: Modifier = Modifier) {
+fun FavoriteCard(
+    activity: Activity,
+    favoriteSelected: Boolean,
+    onFavoriteClick: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     Card(
         modifier = modifier.clickable { expanded = !expanded }
@@ -75,16 +95,36 @@ fun FavoriteCard(activity: Activity, modifier: Modifier = Modifier) {
             )
         ) {
             BoredFavoriteActivityText(
-                activity = activity
+                activity = activity,
+                favoriteSelected = favoriteSelected,
+                onFavoriteClick = onFavoriteClick
             )
             Divider(
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(top = 14.dp, bottom = 10.dp)
             )
-            if (expanded) {
-                ActivityStats(activity = activity)
-            } else {
-                ActivityStatsSmallOverview(activity = activity)
+            AnimatedContent(
+                targetState = expanded,
+                transitionSpec = {
+                    // Slide the new content in and the old content out. The expanded content has
+                    // to slide out via the bottom, and the new content from the top. This is
+                    // This also happens when the content is not expanded (but then the other way
+                    // around).
+                    slideInVertically(
+                        initialOffsetY = { fullHeight -> if (expanded) fullHeight else -fullHeight },
+                        animationSpec = tween(durationMillis = 150)
+                    ) togetherWith slideOutVertically(
+                        targetOffsetY = { fullHeight -> if (expanded) -fullHeight else fullHeight },
+                        animationSpec = tween(durationMillis = 150)
+                    )
+                },
+                label = "FavoriteExpandedAnimation"
+            ) { isExpanded ->
+                if (isExpanded) {
+                    ActivityStats(activity = activity)
+                } else {
+                    ActivityStatsSmallOverview(activity = activity)
+                }
             }
         }
     }
@@ -150,13 +190,16 @@ fun ActivityStatsSmallItem(
 @Composable
 fun BoredFavoriteActivityText(
     activity: Activity,
+    favoriteSelected: Boolean,
+    onFavoriteClick: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Text(
-        modifier = modifier.padding(end = 20.dp),
-        text = activity.activity,
-        style = MaterialTheme.typography.displayMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant
+    BoredActivityText(
+        modifier = modifier,
+        activity = activity,
+        favoriteSelected = favoriteSelected,
+        onFavoriteClick = onFavoriteClick,
+        style = MaterialTheme.typography.displayMedium
     )
 }
 
@@ -164,7 +207,11 @@ fun BoredFavoriteActivityText(
 @Preview(showBackground = true)
 @Composable
 fun FavoriteCardPreview() {
-    FavoriteCard(activity = DummyActivities.activities[0])
+    FavoriteCard(
+        activity = DummyActivities.activities[0],
+        favoriteSelected = false,
+        onFavoriteClick = {}
+    )
 }
 
 @Preview(showBackground = true)
