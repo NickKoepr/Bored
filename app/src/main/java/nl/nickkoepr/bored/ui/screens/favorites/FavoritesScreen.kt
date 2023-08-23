@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.ui.ViewModelProvider
@@ -54,19 +56,23 @@ fun FavoritesScreen(
     val favoriteActivityList by viewModel.getFavoriteActivities()
         .collectAsState(initial = emptyList())
 
-    LazyColumn(modifier = modifier) {
-        items(favoriteActivityList) { activity ->
-            val coroutineScore = rememberCoroutineScope()
-            FavoriteCard(
-                activity = activity,
-                favoriteSelected = true,
-                onFavoriteClick = {
-                    coroutineScore.launch {
-                        viewModel.removeFavoriteActivity(activity)
-                    }
-                },
-                modifier = Modifier.padding(bottom = 15.dp, start = 12.dp, end = 12.dp)
-            )
+    if (favoriteActivityList.isEmpty()) {
+        NoFavoriteMessage(modifier = Modifier.fillMaxSize())
+    } else {
+        LazyColumn(modifier = modifier) {
+            items(favoriteActivityList) { activity ->
+                val coroutineScore = rememberCoroutineScope()
+                FavoriteCard(
+                    activity = activity,
+                    favoriteSelected = true,
+                    onFavoriteClick = {
+                        coroutineScore.launch {
+                            viewModel.removeFavoriteActivity(activity)
+                        }
+                    },
+                    modifier = Modifier.padding(bottom = 15.dp, start = 12.dp, end = 12.dp)
+                )
+            }
         }
     }
 }
@@ -187,6 +193,14 @@ fun ActivityStatsSmallItem(
     }
 }
 
+/**
+ * Display text for the favorite activity title.
+ * @param activity the activity whose title has to be displayed.
+ * @param favoriteSelected true if the activity is selected as favorite, otherwise false.
+ * @param onFavoriteClick function runs when a user clicks on the star icon button. This function
+ * also gives a boolean to indicate if the activity is added to the favorite list (true) or
+ * removed (false) from this list.
+ */
 @Composable
 fun BoredFavoriteActivityText(
     activity: Activity,
@@ -203,6 +217,37 @@ fun BoredFavoriteActivityText(
     )
 }
 
+/**
+ * Item that displays a no favorites message when a user has no acitvities in his favorite
+ * list.
+ */
+@Composable
+fun NoFavoriteMessage(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            modifier = Modifier.size(70.dp),
+            painter = painterResource(id = R.drawable.star_full),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Text(
+            text = "No favorites",
+            style = MaterialTheme.typography.displaySmall,
+            fontSize = 30.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NoFavoriteMessagePreview() {
+    NoFavoriteMessage()
+}
 
 @Preview(showBackground = true)
 @Composable
