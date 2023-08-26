@@ -39,7 +39,8 @@ class MainScreenTest {
         composeTestRule.setContent {
             BoredMainScreen(
                 windowSize = WindowSize.COMPACT,
-                viewModel = BoredMainViewModel(DummyNetworkRepository(), dummyDatabaseRepository)
+                viewModel = BoredMainViewModel(DummyNetworkRepository(), dummyDatabaseRepository),
+                displaySnackbar = { }
             )
         }
     }

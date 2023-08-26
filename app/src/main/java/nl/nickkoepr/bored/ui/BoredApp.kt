@@ -17,10 +17,15 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,6 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.ui.navigation.Screens
 import nl.nickkoepr.bored.ui.screens.favorites.FavoritesScreen
@@ -47,7 +53,11 @@ fun BoredApp(
     val selectedScreen =
         Screens.valueOf(backStackEntry?.destination?.route ?: "HOME")
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopBar(R.string.app_name, false, {}, {})
         },
@@ -74,11 +84,21 @@ fun BoredApp(
                         windowSize = windowSize,
                         modifier = Modifier
                             .padding(10.dp)
-                            .fillMaxSize()
+                            .fillMaxSize(),
+                        displaySnackbar = { message ->
+                            coroutineScope.launch {
+                                displaySnackbar(snackbarHostState, message)
+                            }
+                        }
                     )
                 }
                 composable(route = Screens.FAVOURITES.name) {
                     FavoritesScreen(
+                        displaySnackbar = { message ->
+                            coroutineScope.launch {
+                                displaySnackbar(snackbarHostState, message)
+                            }
+                        },
                         modifier = Modifier
                             .padding(10.dp)
                             .fillMaxSize()
@@ -199,6 +219,14 @@ fun SideNavigationRail(
             }
         }
     }
+}
+
+private suspend fun displaySnackbar(snackbarHostState: SnackbarHostState, message: String) {
+    snackbarHostState.currentSnackbarData?.dismiss()
+    snackbarHostState.showSnackbar(
+        message = message,
+        duration = SnackbarDuration.Short
+    )
 }
 
 @Preview

@@ -50,6 +50,7 @@ import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
 fun FavoritesScreen(
+    displaySnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FavoritesViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
@@ -62,12 +63,15 @@ fun FavoritesScreen(
         LazyColumn(modifier = modifier) {
             items(favoriteActivityList) { activity ->
                 val coroutineScore = rememberCoroutineScope()
+                val removedFavoriteActivityString =
+                    stringResource(id = R.string.removed_favorite_activity)
                 FavoriteCard(
                     activity = activity,
                     favoriteSelected = true,
                     onFavoriteClick = {
                         coroutineScore.launch {
                             viewModel.removeFavoriteActivity(activity)
+                            displaySnackbar(removedFavoriteActivityString)
                         }
                     },
                     modifier = Modifier.padding(bottom = 15.dp, start = 12.dp, end = 12.dp)

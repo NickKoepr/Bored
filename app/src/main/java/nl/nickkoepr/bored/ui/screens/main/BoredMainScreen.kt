@@ -58,6 +58,7 @@ import nl.nickkoepr.bored.utils.toPercent
 @Composable
 fun BoredMainScreen(
     windowSize: WindowSize,
+    displaySnackbar: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: BoredMainViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
@@ -83,17 +84,24 @@ fun BoredMainScreen(
                     val activityById by viewModel
                         .getActivityById(status.activity.key)
                         .collectAsState(null)
+
+                    val addedFavoriteActivityString =
+                        stringResource(id = R.string.added_favorite_activity)
+                    val removedFavoriteActivityString =
+                        stringResource(id = R.string.removed_favorite_activity)
                     BoredActivityText(
                         activity = status.activity,
                         favoriteSelected = activityById != null,
                         onFavoriteClick = { isFavorite ->
                             if (isFavorite) {
                                 viewModel.favoriteActivity(status.activity)
+                                displaySnackbar(addedFavoriteActivityString)
                             } else {
                                 // Removing the activity received by the getActivityById() function
                                 // makes sure that the activity has the right primary key in the database.
                                 activityById?.let { activity ->
                                     viewModel.unfavoriteActivity(activity)
+                                    displaySnackbar(removedFavoriteActivityString)
                                 }
                             }
                         }
