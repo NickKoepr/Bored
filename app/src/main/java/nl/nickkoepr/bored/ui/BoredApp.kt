@@ -225,7 +225,8 @@ private suspend fun displaySnackbar(snackbarHostState: SnackbarHostState, messag
     snackbarHostState.currentSnackbarData?.dismiss()
     snackbarHostState.showSnackbar(
         message = message,
-        duration = SnackbarDuration.Short
+        duration = SnackbarDuration.Short,
+        withDismissAction = true
     )
 }
 
