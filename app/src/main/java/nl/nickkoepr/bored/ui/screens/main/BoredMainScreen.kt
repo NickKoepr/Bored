@@ -269,7 +269,7 @@ fun BoredActivityText(
                 FavoriteStar(
                     selected = favoriteSelected,
                     onClick = onFavoriteClick,
-                    modifier = Modifier.padding(start = 4.dp, top = 3.dp)
+                    modifier = Modifier.padding(start = 4.dp)
                 )
             }
         )
