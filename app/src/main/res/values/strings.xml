@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Bored</string>
-    <string name="back">Back</string>
     <string name="more_options">More options</string>
     <string name="open_link">Open link</string>
     <string name="favorite">favorite</string>
