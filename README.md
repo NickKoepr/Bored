@@ -1,4 +1,4 @@
-![Bored logo](app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp)
+![Bored logo](logo.webp)
 
 # Bored
 
