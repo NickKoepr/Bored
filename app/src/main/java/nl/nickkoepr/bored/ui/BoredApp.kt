@@ -61,6 +61,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.R
@@ -84,6 +85,16 @@ fun BoredApp(
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
+    // Source:
+    //https://github.com/android/nowinandroid/blob/7945a2beba2e2eff8f081742e34f1b0378cd6c9c/app/src/main/java/com/google/samples/apps/nowinandroid/ui/NiaAppState.kt#L143C1-L157C14 (finally understand this =D)
+    val navOptions = navOptions {
+        popUpTo(Screens.HOME.name) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
@@ -99,8 +110,7 @@ fun BoredApp(
         bottomBar = {
             if (windowSize != WindowSize.EXPANDED) {
                 BottomBar(selectedScreen, { screen ->
-                    navController.popBackStack()
-                    navController.navigate(screen.name)
+                    navController.navigate(screen.name, navOptions)
                 })
             }
         },
