@@ -1,5 +1,6 @@
 package nl.nickkoepr.bored.ui
 
+import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,6 +61,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.R
 import nl.nickkoepr.bored.intents.LinkList
@@ -248,7 +250,9 @@ fun AboutDialog(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                TextButton(onClick = { /*TODO: Link to open source licenses*/ }) {
+                TextButton(onClick = {
+                    context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+                }) {
                     Text(
                         text = stringResource(id = R.string.open_source_licenses),
                         fontWeight = FontWeight.Bold
