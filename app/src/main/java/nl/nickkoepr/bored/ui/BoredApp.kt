@@ -1,13 +1,27 @@
 package nl.nickkoepr.bored.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,16 +35,26 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,6 +62,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.R
+import nl.nickkoepr.bored.intents.LinkList
+import nl.nickkoepr.bored.intents.openLink
 import nl.nickkoepr.bored.ui.navigation.Screens
 import nl.nickkoepr.bored.ui.screens.favorites.FavoritesScreen
 import nl.nickkoepr.bored.ui.screens.main.BoredMainScreen
@@ -59,7 +85,14 @@ fun BoredApp(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopBar(R.string.app_name, false, {}, {})
+            var showAboutDialog by rememberSaveable { mutableStateOf(false) }
+
+            TopBar(R.string.app_name, {
+                showAboutDialog = true
+            })
+            if (showAboutDialog) {
+                AboutDialog(onDismiss = { showAboutDialog = false })
+            }
         },
         bottomBar = {
             if (windowSize != WindowSize.EXPANDED) {
@@ -112,44 +145,39 @@ fun BoredApp(
 /**
  * TopAppBar for the Bored app.
  * @param title The title to be displayed in the TopBar.
- * @param canNavigateBack True if a user can navigate to a previous screen.
- * @param onNavigateBack Function that runs when a user clicks on the navigate back icon.
- * @param moreOptionsClick Function that runs when a user clicks on the more options icon.
+ * @param onAboutClick runs when a user clicks on the extra about button.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     @StringRes title: Int,
-    canNavigateBack: Boolean,
-    onNavigateBack: () -> Unit,
-    moreOptionsClick: () -> Unit,
+    onAboutClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var isMoreOptionsExpanded by rememberSaveable { mutableStateOf(false) }
+
     CenterAlignedTopAppBar(
         modifier = modifier,
         title = {
             Text(text = stringResource(id = title))
         },
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = onNavigateBack) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.arrow_back),
-                        contentDescription = stringResource(
-                            id = R.string.back
-                        )
-                    )
-                }
-            }
-        },
         actions = {
-            IconButton(onClick = moreOptionsClick) {
+            IconButton(onClick = { isMoreOptionsExpanded = true }) {
                 Icon(
                     painter = painterResource(id = R.drawable.more_vert),
                     contentDescription = stringResource(
                         id = R.string.more_options
                     )
                 )
+                if (isMoreOptionsExpanded) {
+                    MoreTopBarOptions(
+                        onAboutClick = {
+                            onAboutClick()
+                            isMoreOptionsExpanded = false
+                        },
+                        onDismiss = { isMoreOptionsExpanded = false }
+                    )
+                }
             }
         },
         // Maybe I will change these colors in the future.
@@ -158,6 +186,117 @@ fun TopBar(
             navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
+}
+
+/**
+ * Dialog that displays information about the project, containing links to informative pages about
+ * regarding project.
+ * @param onDismiss runs when the dialog has to close.
+ */
+@Composable
+fun AboutDialog(onDismiss: () -> Unit, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(330.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.lightbulb),
+                    contentDescription = null,
+                    modifier = Modifier.size(59.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.app_name),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Text(
+                    text = stringResource(id = R.string.created_by_dialog),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Center
+                )
+                Divider(
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    modifier = Modifier.padding(top = 20.dp)
+                )
+                LazyHorizontalGrid(
+                    modifier = Modifier.height(40.dp),
+                    rows = GridCells.Adaptive(100.dp)
+                ) {
+                    items(LinkList.entries) { linkList ->
+                        TextButton(
+                            modifier = Modifier.wrapContentSize(),
+                            onClick = { openLink(context, linkList) }) {
+                            Text(
+                                text = stringResource(id = linkList.id),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+                TextButton(onClick = { /*TODO: Link to open source licenses*/ }) {
+                    Text(
+                        text = stringResource(id = R.string.open_source_licenses),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(id = R.string.close),
+                        textAlign = TextAlign.End
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * DropdownMenu with an about option.
+ * @param onAboutClick runs when a user clicks on the 'about' dropdown item.
+ * @param onDismiss runs when a user clicks outside of the dropdown menu.
+ */
+@Composable
+fun MoreTopBarOptions(
+    onAboutClick: () -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    DropdownMenu(
+        modifier = modifier
+            .clickable { onAboutClick() }
+            .padding(
+                top = 6.dp,
+                bottom = 6.dp,
+                start = 12.dp,
+                end = 12.dp
+            ),
+        expanded = true,
+        onDismissRequest = onDismiss
+    ) {
+        Text(
+            text = stringResource(id = R.string.about),
+            style = MaterialTheme.typography.labelMedium,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
 }
 
 /**
@@ -233,7 +372,7 @@ private suspend fun displaySnackbar(snackbarHostState: SnackbarHostState, messag
 @Preview
 @Composable
 fun TopBarPreview() {
-    TopBar(R.string.app_name, true, {}, {})
+    TopBar(R.string.app_name, {})
 }
 
 @Preview

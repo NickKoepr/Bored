@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import nl.nickkoepr.bored.model.Activity
 
-@Database(entities = [Activity::class], version = 1)
+@Database(exportSchema = false, entities = [Activity::class], version = 1)
 abstract class BoredDatabase : RoomDatabase() {
     abstract fun boredDao(): BoredDao
 

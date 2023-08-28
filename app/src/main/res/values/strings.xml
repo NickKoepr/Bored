@@ -5,6 +5,8 @@
     <string name="open_link">Open link</string>
     <string name="favorite">favorite</string>
     <string name="remove_favorite">remove favorite</string>
+    <string name="about">about</string>
+    <string name="close">close</string>
 
     <string name="home">Home</string>
     <string name="favourites">Favourites</string>
@@ -29,4 +31,11 @@
 
     <string name="removed_favorite_activity">Removed favorite activity</string>
     <string name="added_favorite_activity">Added favorite activity</string>
+
+    <string name="created_by_dialog">Created by NickKoepr using the BoredAPI</string>
+
+    <string name="boredapi">BoredAPI</string>
+    <string name="github">GitHub</string>
+    <string name="nickkoepr">NickKoepr</string>
+    <string name="open_source_licenses">Open source licenses</string>
 </resources>

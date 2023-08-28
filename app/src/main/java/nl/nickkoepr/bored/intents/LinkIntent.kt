@@ -13,3 +13,13 @@ fun openLink(context: Context, link: String) {
     val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
     context.startActivity(urlIntent)
 }
+
+/**
+ * Open a link of the LinkList in the browser of a user.
+ * @param context [Context]
+ * @param link the LinkList item that has to be opened in the user's browser.
+ */
+fun openLink(context: Context, link: LinkList) {
+    val urlIntent = Intent(Intent.ACTION_VIEW, Uri.parse(link.url))
+    context.startActivity(urlIntent)
+}
