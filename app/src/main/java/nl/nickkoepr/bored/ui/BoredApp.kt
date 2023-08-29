@@ -2,6 +2,9 @@ package nl.nickkoepr.bored.ui
 
 import android.content.Intent
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -122,7 +125,13 @@ fun BoredApp(
                     navController.navigate(screen.name, navOptions)
                 })
             }
-            NavHost(navController = navController, startDestination = Screens.HOME.name) {
+            NavHost(navController = navController,
+                enterTransition = {
+                    fadeIn(tween(200))
+                }, exitTransition = {
+                    fadeOut(tween(200))
+                }, startDestination = Screens.HOME.name
+            ) {
                 composable(route = Screens.HOME.name) {
                     BoredMainScreen(
                         windowSize = windowSize,
