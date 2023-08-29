@@ -136,7 +136,7 @@ fun BoredApp(
                         }
                     )
                 }
-                composable(route = Screens.FAVOURITES.name) {
+                composable(route = Screens.FAVORITES.name) {
                     FavoritesScreen(
                         displaySnackbar = { message ->
                             coroutineScope.launch {

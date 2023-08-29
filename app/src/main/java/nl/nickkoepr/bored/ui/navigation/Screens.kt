@@ -14,5 +14,5 @@ enum class Screens(
     @DrawableRes val navigationIcon: Int
 ) {
     HOME(R.string.home, R.drawable.home),
-    FAVOURITES(R.string.favourites, R.drawable.star_full)
+    FAVORITES(R.string.favorites, R.drawable.star_full)
 }
