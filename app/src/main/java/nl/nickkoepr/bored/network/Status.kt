@@ -5,5 +5,6 @@ import nl.nickkoepr.bored.model.Activity
 sealed interface Status {
     data object Error : Status
     data object Loading : Status
+    data object NoActivityFound: Status
     data class Success(val activity: Activity) : Status
 }

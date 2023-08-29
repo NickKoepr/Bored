@@ -130,6 +130,10 @@ fun BoredMainScreen(
                 is Status.Error -> {
                     ErrorIndicator(modifier = Modifier.fillMaxWidth())
                 }
+
+                is Status.NoActivityFound -> {
+                    NoActivityFoundIndicator(modifier = Modifier.fillMaxWidth())
+                }
             }
         }
         GenerateActivityFab(
@@ -379,6 +383,33 @@ fun ErrorIndicator(modifier: Modifier = Modifier) {
             painter = painterResource(id = R.drawable.sync_problem),
             contentDescription = stringResource(id = R.string.sync_error),
             tint = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+/**
+ * Indicator for when there are no activities found with the current selected filter(s).
+ */
+@Composable
+fun NoActivityFoundIndicator(modifier: Modifier = Modifier) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Icon(
+            modifier = Modifier.size(60.dp),
+            painter = painterResource(id = R.drawable.activity_not_found),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = stringResource(id = R.string.no_activity_found),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = stringResource(id = R.string.change_filters),
+            style = MaterialTheme.typography.displaySmall,
+            fontSize = 18.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }

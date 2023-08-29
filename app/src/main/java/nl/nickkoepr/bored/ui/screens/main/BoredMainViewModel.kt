@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.MissingFieldException
 import nl.nickkoepr.bored.data.database.repository.DatabaseRepository
 import nl.nickkoepr.bored.data.network.repository.NetworkRepository
 import nl.nickkoepr.bored.model.Activity
@@ -126,6 +128,7 @@ class BoredMainViewModel(
     /**
      * Generate a random activity from the bored api and update the uiState with the current status.
      */
+    @OptIn(ExperimentalSerializationApi::class)
     fun generateActivity() {
         _uiState.update { status -> status.copy(status = Status.Loading) }
         viewModelScope.launch {
@@ -139,7 +142,11 @@ class BoredMainViewModel(
                         Status.Error
                     } catch (e: HttpException) {
                         Status.Error
-                    } catch (e: Throwable) {
+
+                    } catch (e: MissingFieldException) {
+                        Status.NoActivityFound
+                    }
+                    catch (e: Throwable) {
                         Status.Error
                     }
                 )
