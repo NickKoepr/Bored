@@ -48,7 +48,9 @@ class MainScreenTest {
     @Test
     fun mainScreen_activityString_activityIsDisplayedOnScreen() {
         val displayedDummyActivity = DummyActivity.activity1
-        composeTestRule.onNodeWithText(displayedDummyActivity.activity).assertIsDisplayed()
+        // The [icon] at the end of the activity is a placeholder for the favorite star icon.
+        composeTestRule.onNodeWithText("${displayedDummyActivity.activity}[icon]")
+            .assertIsDisplayed()
     }
 
     @Test
@@ -83,7 +85,8 @@ class MainScreenTest {
     fun mainScreen_generateActivityButton_generateNewActivity() {
         val displayedDummyActivity = DummyActivity.activity2
         composeTestRule.onNodeWithTag("generateActivityFab").performClick()
-        composeTestRule.onNodeWithText(displayedDummyActivity.activity).assertIsDisplayed()
+        composeTestRule.onNodeWithText("${displayedDummyActivity.activity}[icon]")
+            .assertIsDisplayed()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
