@@ -119,8 +119,7 @@ fun BoredApp(
         Row(modifier = Modifier.padding(paddingValues)) {
             if (windowSize == WindowSize.EXPANDED) {
                 SideNavigationRail(selected = selectedScreen, onSelect = { screen ->
-                    navController.popBackStack()
-                    navController.navigate(screen.name)
+                    navController.navigate(screen.name, navOptions)
                 })
             }
             NavHost(navController = navController, startDestination = Screens.HOME.name) {
