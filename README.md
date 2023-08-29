@@ -1,6 +1,8 @@
 ![Bored logo](logo.webp)
 
 # Bored
+![home screen](home_screen.png) ⠀⠀
+![favorite screen](favorites_screen.png)
 
 The Bored app is simple: combat your boredom. The Bored app is achieving this by giving the user
 interesting activities to do. These activities are based on
