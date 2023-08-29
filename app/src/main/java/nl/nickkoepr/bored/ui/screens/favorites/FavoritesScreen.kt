@@ -31,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,12 +41,14 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import nl.nickkoepr.bored.R
+import nl.nickkoepr.bored.intents.openLink
 import nl.nickkoepr.bored.model.Activity
 import nl.nickkoepr.bored.model.DummyActivities
 import nl.nickkoepr.bored.ui.ViewModelProvider
 import nl.nickkoepr.bored.ui.screens.SelectedFilter
 import nl.nickkoepr.bored.ui.screens.main.ActivityStats
 import nl.nickkoepr.bored.ui.screens.main.BoredActivityText
+import nl.nickkoepr.bored.ui.screens.main.LinkButton
 import nl.nickkoepr.bored.utils.toPercent
 
 @Composable
@@ -93,6 +96,8 @@ fun FavoriteCard(
     modifier: Modifier = Modifier
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+
     Card(
         modifier = modifier.clickable { expanded = !expanded }
     ) {
@@ -109,6 +114,10 @@ fun FavoriteCard(
                 favoriteSelected = favoriteSelected,
                 onFavoriteClick = onFavoriteClick
             )
+            // Add a link button when a activity contains a link.
+            if (activity.link.isNotEmpty()) {
+                LinkButton(onClick = { openLink(context, activity.link) })
+            }
             Divider(
                 color = MaterialTheme.colorScheme.onTertiaryContainer,
                 modifier = Modifier.padding(top = 14.dp, bottom = 10.dp)
