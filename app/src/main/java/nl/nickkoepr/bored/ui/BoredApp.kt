@@ -295,12 +295,7 @@ fun MoreTopBarOptions(
     DropdownMenu(
         modifier = modifier
             .clickable { onAboutClick() }
-            .padding(
-                top = 6.dp,
-                bottom = 6.dp,
-                start = 12.dp,
-                end = 12.dp
-            ),
+            .padding(start = 35.dp, end = 35.dp, top = 2.dp, bottom = 2.dp),
         expanded = true,
         onDismissRequest = onDismiss
     ) {
