@@ -232,7 +232,7 @@ fun FilterElementSlider(
 }
 
 /**
- * [FilterElementRangeSlider] with a range from 0 to 100 and steps of 10.
+ * [FilterElementRangeSlider] with a range from 0 to 100 and steps of 9.
  * @param value currently selected value range.
  * @param onValueChange called when the selected range is changed.
  */
@@ -245,7 +245,7 @@ fun FilterElementSliderZeroToHundred(
     FilterElementRangeSlider(
         value = value,
         range = 0f..100f,
-        steps = 10,
+        steps = 9,
         onValueChange = onValueChange,
         isPercent = true,
         modifier = modifier
