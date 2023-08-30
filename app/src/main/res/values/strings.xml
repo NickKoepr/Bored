@@ -7,6 +7,7 @@
     <string name="about">about</string>
     <string name="close">close</string>
     <string name="no_activity_found">no activity found</string>
+    <string name="no_favorites">No favorites</string>
     <string name="change_filters">change your filters to find activities again!</string>
 
     <string name="home">Home</string>

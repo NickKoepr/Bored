@@ -1,7 +1,9 @@
 package nl.nickkoepr.bored.dummy.repositories
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import nl.nickkoepr.bored.data.database.repository.DatabaseRepository
 import nl.nickkoepr.bored.data.network.repository.NetworkRepository
 import nl.nickkoepr.bored.dummy.DummyActivity
@@ -21,20 +23,27 @@ class DummyNetworkRepository : NetworkRepository {
 }
 
 class DummyDatabaseRepository : DatabaseRepository {
-    private val dummyDataList = mutableListOf<Activity>()
+    private val dummyDataListState = MutableStateFlow<List<Activity>>(emptyList())
+
     override suspend fun addFavorite(activity: Activity) {
-        dummyDataList.add(activity)
+        dummyDataListState.update { state ->
+            state + activity
+        }
     }
 
     override suspend fun removeFavorite(activity: Activity) {
-        dummyDataList.remove(activity)
+        dummyDataListState.update { state ->
+            state.filterNot { it == activity }
+        }
     }
 
     override fun getFavorites(): Flow<List<Activity>> {
-        return flowOf(dummyDataList)
+        return dummyDataListState
     }
 
     override fun getActivityByKey(key: String): Flow<Activity?> {
-        return flowOf(dummyDataList.find { it.key == key })
+        return dummyDataListState.map { activityList ->
+            activityList.find { activity -> activity.key == key }
+        }
     }
 }

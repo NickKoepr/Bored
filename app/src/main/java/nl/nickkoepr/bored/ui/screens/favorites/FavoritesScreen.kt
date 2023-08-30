@@ -251,7 +251,7 @@ fun NoFavoriteMessage(modifier: Modifier = Modifier) {
             tint = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "No favorites",
+            text = stringResource(id = R.string.no_favorites),
             style = MaterialTheme.typography.displaySmall,
             fontSize = 30.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
