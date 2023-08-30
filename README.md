@@ -16,6 +16,9 @@ I created this Android app after finishing the Android Basics with Compose cours
 Android development with Jetpack Compose. So don't expect too much, because this is my first Android
 app 😊
 
+### Downloading the app
+You can download the latest APK from the [releases](https://github.com/NickKoepr/Bored/releases) page on GitHub.
+
 ### Used libraries and APIs
 
 I have used different libraries and APIs in this app.
