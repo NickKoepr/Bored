@@ -8,6 +8,8 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -153,9 +155,10 @@ fun FavoriteCard(
  * Row containing all the different activity stats with an icon and the given stat.
  * @param activity activity whose status should be shown.
  */
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ActivityStatsSmallOverview(activity: Activity, modifier: Modifier = Modifier) {
-    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+    FlowRow(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         ActivityStatsSmallItem(
             selectedFilter = SelectedFilter.ACCESSIBILITY,
             value = activity.accessibility.toPercent()
